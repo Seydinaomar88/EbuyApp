@@ -14,6 +14,29 @@
     overlay.classList.add("hidden");
   };
 
+  const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+
+    /*Supprimer utilisateur connecté*/ 
+    localStorage.removeItem("connectedUser");
+
+    /*(Optionnel) Vider le panier*/ 
+    localStorage.removeItem("ebuy_cart");
+
+    /*(Optionnel) fermer toutes les modales*/ 
+    if (typeof app !== "undefined") {
+      app.cartService.clear();
+    }
+
+    alert("Vous êtes déconnecté");
+
+    /*Redirection vers login*/ 
+    window.location.href = "../index.html";
+  });
+}
+
 class ProductManager {
   constructor(options) {
     this.form = options.formId ? document.getElementById(options.formId) : null;
