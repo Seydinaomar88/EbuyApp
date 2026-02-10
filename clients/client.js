@@ -29,8 +29,6 @@ overlay.addEventListener('click', () => {
     icon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
 });
 
-/* DECONNEXION UTILISATEUR */
-
 const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
@@ -53,7 +51,6 @@ if (logoutBtn) {
     window.location.href = "../index.html";
   });
 }
-
 
 const { jsPDF } = window.jspdf;
 
@@ -95,6 +92,7 @@ class CartService {
                 name: product.name,
                 price: product.price,
                 image: product.image,
+                quantity: 1
             });
         }
         this.save();
