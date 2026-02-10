@@ -103,5 +103,5 @@ function protectPage(requiredRole = null) {
 // =======================
 function logout() {
   localStorage.removeItem("connectedUser");
-  window.location.href = "index.html";
+  window.location.href = "../index.html";
 }
