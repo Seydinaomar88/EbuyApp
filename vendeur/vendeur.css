@@ -1,0 +1,60 @@
+/* Notification card */
+.toast-card {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  min-width: 280px;
+  max-width: 350px;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  background-color: #fff;
+  border-left-width: 6px;
+  font-family: sans-serif;
+  animation: card-in 0.5s forwards;
+}
+
+.toast-card.success { border-color: #22c55e; }
+.toast-card.error { border-color: #ef4444; }
+
+.toast-card .icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+}
+
+.toast-card .content {
+  flex: 1;
+}
+
+.toast-card .content h4 {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.toast-card .content p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.toast-card.hide {
+  animation: card-out 0.5s forwards;
+}
+
+/* Animations */
+@keyframes card-in {
+  0% { opacity: 0; transform: translateX(100%) scale(0.8); }
+  60% { opacity: 1; transform: translateX(0) scale(1.05); }
+  100% { transform: translateX(0) scale(1); }
+}
+@keyframes card-out {
+  0% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(100%) scale(0.8); }
+}
+
