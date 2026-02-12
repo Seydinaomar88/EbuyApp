@@ -1,47 +1,37 @@
-/*Sidebar mobile toggle*/ 
-  const sidebar = document.getElementById("sidebar");
-  const overlay = document.getElementById("overlay");
-  document.getElementById("openSidebar").onclick = () => {
-    sidebar.classList.remove("-translate-x-full");
-    overlay.classList.remove("hidden");
-  };
-  document.getElementById("closeSidebar").onclick = () => {
-    sidebar.classList.add("-translate-x-full");
-    overlay.classList.add("hidden");
-  };
-  overlay.onclick = () => {
-    sidebar.classList.add("-translate-x-full");
-    overlay.classList.add("hidden");
-  };
+/* Sidebar mobile toggle */
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+document.getElementById("openSidebar").onclick = () => {
+  sidebar.classList.remove("-translate-x-full");
+  overlay.classList.remove("hidden");
+};
+document.getElementById("closeSidebar").onclick = () => {
+  sidebar.classList.add("-translate-x-full");
+  overlay.classList.add("hidden");
+};
+overlay.onclick = () => {
+  sidebar.classList.add("-translate-x-full");
+  overlay.classList.add("hidden");
+};
 
-  const logoutBtn = document.getElementById("logoutBtn");
-
+/* Logout */
+const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
-
-    /*Supprimer utilisateur connecté*/ 
     localStorage.removeItem("connectedUser");
-
-    /*(Optionnel) Vider le panier*/ 
     localStorage.removeItem("ebuy_cart");
-
-    /*(Optionnel) fermer toutes les modales*/ 
-    if (typeof app !== "undefined") {
-      app.cartService.clear();
-    }
-
     alert("Vous êtes déconnecté");
-
-    /*Redirection vers login*/ 
     window.location.href = "../index.html";
   });
 }
 
+/* Product Manager */
 class ProductManager {
   constructor(options) {
     this.form = options.formId ? document.getElementById(options.formId) : null;
     this.nameInput = this.form ? document.getElementById("name") : null;
     this.priceInput = this.form ? document.getElementById("price") : null;
+    this.descriptionInput = this.form ? document.getElementById("description") : null;
     this.imageInput = this.form ? document.getElementById("image") : null;
 
     if (this.form) {
@@ -60,7 +50,6 @@ class ProductManager {
   showCard(message, type = "success") {
     const card = document.createElement("div");
     card.className = `toast-card ${type}`;
-
     const icon = type === "success"
       ? `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" 
           xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" 
@@ -68,7 +57,6 @@ class ProductManager {
       : `<svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" 
           xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" 
           stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
-
     card.innerHTML = `
       ${icon}
       <div class="content">
@@ -76,9 +64,7 @@ class ProductManager {
         <p>${message}</p>
       </div>
     `;
-
     document.body.appendChild(card);
-
     setTimeout(() => {
       card.classList.add("hide");
       card.addEventListener("animationend", () => card.remove());
@@ -87,20 +73,19 @@ class ProductManager {
 
   handleFormSubmit(e) {
     e.preventDefault();
-
     const name = this.nameInput.value.trim();
     const price = this.priceInput.value.trim();
+    const description = this.descriptionInput.value.trim();
 
-    if (!name || !price || this.imageInput.files.length === 0) {
+    if (!name || !price || !description || this.imageInput.files.length === 0) {
       this.showCard("Veuillez remplir tous les champs et choisir une image !", "error");
       return;
     }
 
     const products = this.getProducts();
-
     const reader = new FileReader();
     reader.onload = (event) => {
-      const productData = { name, price, image: event.target.result };
+      const productData = { name, price, description, image: event.target.result };
       products.push(productData);
       this.saveProducts(products);
       this.form.reset();

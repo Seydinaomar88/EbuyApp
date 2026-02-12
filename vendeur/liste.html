@@ -23,7 +23,6 @@
                 <a href="/vendeur/vendeur.html" class="block px-4 py-2 rounded hover:bg-purple-100">Ajouter un produit</a>
                 <a href="/vendeur/liste.html" class="block px-4 py-2 rounded hover:bg-purple-100 bg-purple-100">Liste des produits</a>
                 <a href="/vendeur/gestion.html" class="block px-4 py-2 rounded hover:bg-purple-100">Gestion des ventes</a>
-                <a href="/vendeur/suivi.html" class="block px-4 py-2 rounded hover:bg-purple-100">Suivi des commendes</a>
             </nav>
         </aside>
 
@@ -35,17 +34,13 @@
                 <div class="flex items-center gap-2">
                     <button id="openSidebar"
                         class="md:hidden px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-
+                    ☰
                     </button>
                     <span class="font-bold text-lg md:hidden">Vendeur</span>
                 </div>
 
                 <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition ">Déconnecter</button>
             </header>
-
 
             <main class="flex-1 p-6 overflow-auto">
 
@@ -58,6 +53,7 @@
                                 <th class="px-4 py-2 text-left">#</th>
                                 <th class="px-4 py-2 text-left">Image</th>
                                 <th class="px-4 py-2 text-left">Nom</th>
+                                <th class="px-4 py-2 text-left">Description</th>
                                 <th class="px-4 py-2 text-left">Prix</th>
                                 <th class="px-4 py-2 text-left">Actions</th>
                             </tr>
@@ -78,21 +74,18 @@
         <div class="bg-white rounded-2xl shadow-2xl p-6 w-11/12 max-w-md mx-auto">
             <h3 class="text-2xl font-bold mb-4 text-center">Modifier le produit</h3>
             <form id="editForm" class="space-y-3">
-                <input type="text" id="editName" placeholder="Nom du produit" class="border p-3 w-full rounded-lg"
-                    required>
+                <input type="text" id="editName" placeholder="Nom du produit" class="border p-3 w-full rounded-lg" required>
+                <textarea id="editDescription" placeholder="Description du produit" class="border p-3 w-full rounded-lg" required></textarea>
                 <input type="number" id="editPrice" placeholder="Prix" class="border p-3 w-full rounded-lg" required>
                 <input type="file" id="editImage" accept="image/*" class="border p-3 w-full rounded-lg">
                 <input type="hidden" id="editIndexModal">
                 <div class="flex justify-end gap-3 mt-2">
-                    <button type="button" id="closeModal"
-                        class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition">Annuler</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">Enregistrer</button>
+                    <button type="button" id="closeModal" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition">Annuler</button>
+                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">Enregistrer</button>
                 </div>
             </form>
         </div>
     </div>
-
 
     <script src="/vendeur/liste.js"></script>
 </body>
