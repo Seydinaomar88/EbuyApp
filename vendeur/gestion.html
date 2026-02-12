@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="vendeur.css">
+  <title>Gestion des ventes</title>
+</head>
+<body class="bg-gray-100">
+
+<div class="flex h-screen">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-md flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30">
+    <div class="flex items-center justify-between h-16 border-b px-4">
+      <div class="flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+        <h1 class="text-xl font-bold ml-2">Vendeur</h1>
+      </div>
+      <button id="closeSidebar" class="md:hidden text-gray-600">✕</button>
+    </div>
+    <nav class="flex-1 px-4 py-6 space-y-2">
+      <a href="/vendeur/vendeur.html" class="block px-4 py-2 rounded hover:bg-purple-100">Ajouter un produit</a>
+      <a href="/vendeur/liste.html" class="block px-4 py-2 rounded hover:bg-purple-100">Liste des produits</a>
+      <a href="/vendeur/gestion.html" class="block px-4 py-2 rounded hover:bg-purple-100">Gestion des ventes</a>
+    </nav>
+  </aside>
+
+  <!-- Overlay mobile -->
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20 md:hidden"></div>
+
+  <!-- Main content -->
+  <div class="flex-1 flex flex-col md:ml-64">
+
+    <!-- Navbar -->
+    <header class="flex justify-between items-center bg-white shadow-md h-16 px-4">
+      <div class="flex items-center gap-2">
+        <button id="openSidebar" class="md:hidden text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+
+        </button>
+        <h2 class="text-xl font-bold md:hidden">Vendeur</h2>
+      </div>
+      <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition ">Déconnecter</button>
+    </header>
+
+    <main class="flex-1 p-6 overflow-auto">
+
+      
+
+    </main>
+  </div>
+</div>
+
+<!-- <script src="/vendeur/vendeur.js"></script> -->
+<script src="/vendeur/gestion.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Buy Boutique</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <!--  NAVBAR  -->
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                    <span class="font-bold text-xl text-gray-700">E-Buy</span>
+                </div>
+
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="/clients/client.html" class="text-gray-600 hover:text-purple-600">Home</a>
+                    <a href="#" class="text-gray-600 hover:text-purple-600">Contact</a>
+                    <button id="cartBtn"
+                        class="relative flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-1" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                        </svg>
+                        <span>Panier</span>
+                        <span id="cartCount"
+                            class="absolute -top-2 -right-2 bg-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    <button id="logoutBtn"
+                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition ">Déconnecter</button>
+
+
+                </div>
+
+                <!-- Mobile button -->
+                <button id="menuBtn" class="md:hidden p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <!-- Overlay -->
+                <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+                <!-- Mobile menu -->
+                <div id="mobileMenu"
+                    class="fixed top-0 right-0 h-full w-64 bg-white shadow-md transform translate-x-full transition-transform duration-300 z-50 md:hidden">
+                    <a href="/clients/client.html" class="block py-2 px-4 border-b">Home</a>
+                    <a href="#" class="block py-2 px-4 border-b">Contact</a>
+                    <div class="flex justify-center mt-2">
+                        <button id="cartBtn"
+                            class="relative flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-1" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                            </svg>
+                            <span>Panier</span>
+                            <span id="cartCount"
+                                class="absolute -top-2 -right-2 bg-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                        </button>
+                    </div>
+
+                    <button id="logoutBtn"
+                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition m-5">Déconnecte</button>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden bg-white px-6 pb-4 md:hidden">
+            <a href="/clients/client.html" class="block py-2">Home</a>
+            <a href="#" class="block py-2">Contact</a>
+            <button id="cartBtnMobile" class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg> (<span id="cartCountMobile">0</span>)
+            </button>
+        </div>
+    </nav>
+
+    <!-- Recherche -->
+    <section class="pt-24 max-w-7xl mx-auto px-6">
+        <div class="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row gap-4 items-center">
+            <input id="searchText" type="text" placeholder="Rechercher un produit..."
+                class="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
+            <label class="flex items-center gap-2 border px-4 py-2 rounded-lg cursor-pointer">
+                Recherche par image
+                <input type="file" id="searchImage" accept="image/*" class="hidden">
+            </label>
+        </div>
+    </section>
+
+    <!--  PRODUITS  -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
+        <!--  PAGINATION AJOUTÉE -->
+        <div id="pagination" class="flex justify-center gap-2 mt-10 flex-wrap"></div>
+    </main>
+
+    <!--MODAL PRODUIT  -->
+    <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white p-6 rounded-lg w-96 relative">
+            <button id="closeModal" class="absolute top-2 right-2">X</button>
+            <img id="modalImage" class="w-full h-48 object-contain" />
+            <h2 id="modalName" class="text-xl font-bold mt-2"></h2>
+            <p id="modalPrice" class="text-gray-700 mt-1"></p>
+            <p id="modalDescription" class="text-gray-500 mt-2"></p> <!-- <-- ici -->
+            <button id="addToCartModal" class="mt-4 bg-black text-white py-2 w-full rounded">Ajouter au panier</button>
+        </div>
+    </div>
+
+
+    <!--  PANIER  -->
+    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-xl w-11/12 md:w-1/2 max-h-[80vh] overflow-y-auto relative">
+            <button id="closeCart" class="absolute top-2 right-3 text-xl">✕</button>
+            <h2 class="text-xl font-bold mb-4">Votre panier</h2>
+            <div id="cartItems" class="space-y-2"></div>
+            <p class="mt-4 font-bold">Total : <span id="cartTotal">0</span> FCFA</p>
+            <button id="checkout" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg">Payer & Générer
+                facture</button>
+        </div>
+    </div>
+
+    <!-- TOAST  -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-black text-white px-4 py-2 rounded-lg opacity-0 transition">Message
+    </div>
+
+    <script src="/clients/client.js"></script>
+</body>
+
+</html>

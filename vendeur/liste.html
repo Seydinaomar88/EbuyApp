@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Liste des produits</title>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex h-screen">
+
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 w-64 bg-white shadow-md flex flex-col z-20 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+            <div class="flex items-center justify-between h-16 border-b px-4">
+                <h1 class="text-xl font-bold">Vendeur</h1>
+                <button class="md:hidden" id="closeSidebar">&times;</button>
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="/vendeur/vendeur.html" class="block px-4 py-2 rounded hover:bg-purple-100">Ajouter un produit</a>
+                <a href="/vendeur/liste.html" class="block px-4 py-2 rounded hover:bg-purple-100 bg-purple-100">Liste des produits</a>
+                <a href="/vendeur/gestion.html" class="block px-4 py-2 rounded hover:bg-purple-100">Gestion des ventes</a>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col md:ml-64">
+
+            <!-- Navbar -->
+            <header class="flex items-center bg-white shadow-md h-16 px-4 justify-between">
+                <div class="flex items-center gap-2">
+                    <button id="openSidebar"
+                        class="md:hidden px-3 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                    ☰
+                    </button>
+                    <span class="font-bold text-lg md:hidden">Vendeur</span>
+                </div>
+
+                <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition ">Déconnecter</button>
+            </header>
+
+            <main class="flex-1 p-6 overflow-auto">
+
+                <!-- Tableau produits -->
+                <section>
+                    <h2 class="text-2xl font-bold mb-4">Liste des produits</h2>
+                    <table class="min-w-full bg-white rounded-xl shadow-md overflow-hidden">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th class="px-4 py-2 text-left">#</th>
+                                <th class="px-4 py-2 text-left">Image</th>
+                                <th class="px-4 py-2 text-left">Nom</th>
+                                <th class="px-4 py-2 text-left">Description</th>
+                                <th class="px-4 py-2 text-left">Prix</th>
+                                <th class="px-4 py-2 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody"></tbody>
+                    </table>
+                    <!-- Pagination -->
+                    <div id="pagination" class="flex justify-center items-center gap-2 mt-4"></div>
+
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Modifier -->
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-11/12 max-w-md mx-auto">
+            <h3 class="text-2xl font-bold mb-4 text-center">Modifier le produit</h3>
+            <form id="editForm" class="space-y-3">
+                <input type="text" id="editName" placeholder="Nom du produit" class="border p-3 w-full rounded-lg" required>
+                <textarea id="editDescription" placeholder="Description du produit" class="border p-3 w-full rounded-lg" required></textarea>
+                <input type="number" id="editPrice" placeholder="Prix" class="border p-3 w-full rounded-lg" required>
+                <input type="file" id="editImage" accept="image/*" class="border p-3 w-full rounded-lg">
+                <input type="hidden" id="editIndexModal">
+                <div class="flex justify-end gap-3 mt-2">
+                    <button type="button" id="closeModal" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition">Annuler</button>
+                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/vendeur/liste.js"></script>
+</body>
+</html>
