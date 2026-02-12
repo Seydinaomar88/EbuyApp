@@ -26,7 +26,6 @@
       <a href="/vendeur/vendeur.html" class="block px-4 py-2 rounded hover:bg-purple-100">Ajouter un produit</a>
       <a href="/vendeur/liste.html" class="block px-4 py-2 rounded hover:bg-purple-100">Liste des produits</a>
       <a href="/vendeur/gestion.html" class="block px-4 py-2 rounded hover:bg-purple-100">Gestion des ventes</a>
-      <a href="/vendeur/suivi.html" class="block px-4 py-2 rounded hover:bg-purple-100">Suivi des commendes</a>
     </nav>
   </aside>
 
@@ -39,15 +38,10 @@
     <!-- Navbar -->
     <header class="flex justify-between items-center bg-white shadow-md h-16 px-4">
       <div class="flex items-center gap-2">
-        <button id="openSidebar" class="md:hidden text-gray-600">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
-
-        </button>
+        <button id="openSidebar" class="md:hidden text-gray-600">☰</button>
         <h2 class="text-xl font-bold md:hidden">Vendeur</h2>
       </div>
-      <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition ">Déconnecter</button>
+      <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Déconnecter</button>
     </header>
 
     <main class="flex-1 p-6 overflow-auto">
@@ -56,9 +50,10 @@
       <section class="mb-6 bg-white p-4 rounded-xl shadow-md">
         <h2 class="text-xl font-bold mb-2">Ajouter un produit</h2>
         <form id="productForm" class="space-y-2">
-          <input type="text" id="name" placeholder="Nom du produit" class="border p-2 w-full rounded">
-          <input type="number" id="price" placeholder="Prix" class="border p-2 w-full rounded">
-          <input type="file" id="image" accept="image/*" class="border p-2 w-full rounded">
+          <input type="text" id="name" placeholder="Nom du produit" class="border p-2 w-full rounded" required>
+          <textarea id="description" placeholder="Description du produit" class="border p-2 w-full rounded" required></textarea>
+          <input type="number" id="price" placeholder="Prix" class="border p-2 w-full rounded" required>
+          <input type="file" id="image" accept="image/*" class="border p-2 w-full rounded" required>
           <input type="hidden" id="editIndex">
           <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded w-full">Ajouter</button>
         </form>

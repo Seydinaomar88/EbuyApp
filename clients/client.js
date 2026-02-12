@@ -32,24 +32,24 @@ overlay.addEventListener('click', () => {
 const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
+    logoutBtn.addEventListener("click", () => {
 
-    /*Supprimer utilisateur connecté*/ 
-    localStorage.removeItem("connectedUser");
+        /*Supprimer utilisateur connecté*/
+        localStorage.removeItem("connectedUser");
 
-    /*(Optionnel) Vider le panier*/ 
-    localStorage.removeItem("ebuy_cart");
+        /*(Optionnel) Vider le panier*/
+        localStorage.removeItem("ebuy_cart");
 
-    /*(Optionnel) fermer toutes les modales*/ 
-    if (typeof app !== "undefined") {
-      app.cartService.clear();
-    }
+        /*(Optionnel) fermer toutes les modales*/
+        if (typeof app !== "undefined") {
+            app.cartService.clear();
+        }
 
-    alert("Vous êtes déconnecté");
+        alert("Vous êtes déconnecté");
 
-    /*Redirection vers login*/ 
-    window.location.href = "../index.html";
-  });
+        /*Redirection vers login*/
+        window.location.href = "../index.html";
+    });
 }
 
 const { jsPDF } = window.jspdf;
@@ -59,12 +59,13 @@ class ProductService {
     static init() {
         if (!localStorage.getItem("products")) {
             localStorage.setItem("products", JSON.stringify([
-                { id: 1, name: "chaussure Nike rouge", price: 10000, image: "./assets/products/shoes1.jpg" },
-                { id: 2, name: "chaussure Nike blanche", price: 15000, image: "./assets/products/shoes1-2.jpg" },
-                { id: 3, name: "chaussure Nike verte", price: 20000, image: "./assets/products/shoes1-1.jpg" },
-                { id: 4, name: "Chaussure marron", price: 20000, image: "./assets/products/shoes1-3.jpg" },
+                { id: 1, name: "chaussure Nike rouge", price: 10000, image: "./assets/products/shoes1.jpg", description: "Chaussure rouge confortable et stylée pour tous les jours." },
+                { id: 2, name: "chaussure Nike blanche", price: 15000, image: "./assets/products/shoes1-2.jpg", description: "Chaussure blanche légère et élégante." },
+                { id: 3, name: "chaussure Nike verte", price: 20000, image: "./assets/products/shoes1-1.jpg", description: "Chaussure verte résistante et moderne." },
+                { id: 4, name: "Chaussure marron", price: 20000, image: "./assets/products/shoes1-3.jpg", description: "Chaussure marron chic pour toutes occasions." },
             ]));
         }
+
     }
 
     static getAll() {
@@ -155,6 +156,8 @@ class ShopApp {
         this.productModal = document.getElementById("productModal");
         this.modalImage = document.getElementById("modalImage");
         this.modalName = document.getElementById("modalName");
+        this.modalDescription = document.getElementById("modalDescription");
+
         this.modalPrice = document.getElementById("modalPrice");
 
         this.searchInput = document.getElementById("searchText");
@@ -257,6 +260,7 @@ class ShopApp {
         </div>
         <div class="mt-4 flex-1 flex flex-col justify-between">
             <p class="text-gray-700 text-base font-semibold">${p.name}</p>
+            <p class="text-gray-500 text-sm mt-1">${p.description || ""}</p>
             <div class="flex justify-between mt-2">
                 <span class="font-bold text-xl">${p.price} FCFA</span>
                 <span class="text-gray-400 cursor-pointer add-heart text-lg">
@@ -318,6 +322,7 @@ class ShopApp {
         this.modalImage.src = p.image;
         this.modalName.textContent = p.name;
         this.modalPrice.textContent = `${p.price} FCFA`;
+        this.modalDescription.textContent = p.description || ""; // Description ajoutée
         this.productModal.classList.remove("hidden");
     }
 
@@ -373,101 +378,101 @@ class ShopApp {
         this.updateCartCount();
     }
 
-checkout() {
-    if (this.cartService.cart.length === 0) {
-        alert("Panier vide !");
-        return;
+    checkout() {
+        if (this.cartService.cart.length === 0) {
+            alert("Panier vide !");
+            return;
+        }
+
+        const doc = new jsPDF();
+        const primaryColor = [88, 80, 236];
+        const gray = [120, 120, 120];
+
+        /*Titre*/ 
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.setTextColor(...primaryColor);
+        doc.text("FACTURE CLIENT", 105, 20, { align: "center" });
+
+        /*Ligne*/ 
+        doc.setDrawColor(...primaryColor);
+        doc.line(20, 25, 190, 25);
+
+        /*Infos*/ 
+        doc.setFontSize(10);
+        doc.setTextColor(...gray);
+        const date = new Date();
+        doc.text(`Date : ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`, 20, 35);
+        doc.text("E-Buy Shop", 150, 35);
+
+        /*Table*/ 
+        let y = 50;
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0);
+        doc.text("Produit", 20, y);
+        doc.text("Qté", 110, y);
+        doc.text("Prix", 130, y);
+        doc.text("Total", 160, y);
+        doc.line(20, y + 2, 190, y + 2);
+
+        y += 10;
+        let total = 0;
+        doc.setFont("helvetica", "normal");
+
+        this.cartService.cart.forEach(p => {
+            const subtotal = p.price * p.quantity;
+            total += subtotal;
+
+            doc.text(p.name, 20, y);
+            doc.text(String(p.quantity), 115, y);
+            doc.text(`${p.price} FCFA`, 130, y);
+            doc.text(`${subtotal.toFixed(2)} FCFA`, 160, y);
+
+            y += 8;
+        });
+
+        /*Total*/ 
+        y += 10;
+        doc.setDrawColor(0);
+        doc.line(110, y, 190, y);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(`TOTAL : ${total.toFixed(2)} FCFA`, 150, y + 10);
+
+        /*Footer*/ 
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "italic");
+        doc.setTextColor(...gray);
+        doc.text("Merci pour votre achat ", 105, 280, { align: "center" });
+        doc.text("Signature : ____________________", 20, 260);
+
+        doc.save("facture-ebuy.pdf");
+
+        /*ENREGISTRER LA VENTE AVEC DATE COMPLETE */ 
+        const sale = {
+            id: Date.now(),
+            date: new Date().toISOString(), // garde date + heure
+            items: this.cartService.cart.map(p => ({
+                id: p.id,
+                name: p.name,
+                price: p.price,
+                quantity: p.quantity
+            })),
+            total: total
+        };
+
+        const sales = JSON.parse(localStorage.getItem("sales") || "[]");
+        sales.push(sale);
+        localStorage.setItem("sales", JSON.stringify(sales));
+
+        /*Reset panier*/ 
+        this.cartService.clear();
+        this.renderCart();
+        this.updateCartCount();
+        this.cartModal.classList.add("hidden");
+
+        alert("Paiement effectué ! Vente enregistrée.");
     }
-
-    const doc = new jsPDF();
-    const primaryColor = [88, 80, 236];
-    const gray = [120, 120, 120];
-
-    // Titre
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.setTextColor(...primaryColor);
-    doc.text("FACTURE CLIENT", 105, 20, { align: "center" });
-
-    // Ligne
-    doc.setDrawColor(...primaryColor);
-    doc.line(20, 25, 190, 25);
-
-    // Infos
-    doc.setFontSize(10);
-    doc.setTextColor(...gray);
-    const date = new Date();
-    doc.text(`Date : ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`, 20, 35);
-    doc.text("E-Buy Shop", 150, 35);
-
-    // Table
-    let y = 50;
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(0);
-    doc.text("Produit", 20, y);
-    doc.text("Qté", 110, y);
-    doc.text("Prix", 130, y);
-    doc.text("Total", 160, y);
-    doc.line(20, y + 2, 190, y + 2);
-
-    y += 10;
-    let total = 0;
-    doc.setFont("helvetica", "normal");
-
-    this.cartService.cart.forEach(p => {
-        const subtotal = p.price * p.quantity;
-        total += subtotal;
-
-        doc.text(p.name, 20, y);
-        doc.text(String(p.quantity), 115, y);
-        doc.text(`${p.price} FCFA`, 130, y);
-        doc.text(`${subtotal.toFixed(2)} FCFA`, 160, y);
-
-        y += 8;
-    });
-
-    // Total
-    y += 10;
-    doc.setDrawColor(0);
-    doc.line(110, y, 190, y);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.text(`TOTAL : ${total.toFixed(2)} FCFA`, 150, y + 10);
-
-    // Footer
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "italic");
-    doc.setTextColor(...gray);
-    doc.text("Merci pour votre achat ", 105, 280, { align: "center" });
-    doc.text("Signature : ____________________", 20, 260);
-
-    doc.save("facture-ebuy.pdf");
-
-    // === ENREGISTRER LA VENTE AVEC DATE COMPLETE ===
-    const sale = {
-        id: Date.now(),
-        date: new Date().toISOString(), // garde date + heure
-        items: this.cartService.cart.map(p => ({
-            id: p.id,
-            name: p.name,
-            price: p.price,
-            quantity: p.quantity
-        })),
-        total: total
-    };
-
-    const sales = JSON.parse(localStorage.getItem("sales") || "[]");
-    sales.push(sale);
-    localStorage.setItem("sales", JSON.stringify(sales));
-
-    // Reset panier
-    this.cartService.clear();
-    this.renderCart();
-    this.updateCartCount();
-    this.cartModal.classList.add("hidden");
-
-    alert("Paiement effectué ! Vente enregistrée.");
-}
 
 
 
