@@ -39,7 +39,7 @@ if (registerForm) {
     localStorage.setItem("users", JSON.stringify(users));
 
     alert("Compte créé avec succès");
-    window.location.href = "index.html"; // retour connexion
+    window.location.href = "../index.html"; // retour connexion
   });
 }
 
