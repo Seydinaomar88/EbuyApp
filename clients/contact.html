@@ -96,53 +96,76 @@
         </div>
     </nav>
 
-    <!-- Recherche -->
-    <section class="pt-24 max-w-7xl mx-auto px-6">
-        <div class="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row gap-4 items-center">
-            <input id="searchText" type="text" placeholder="Rechercher un produit..."
-                class="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
-            <label class="flex items-center gap-2 border px-4 py-2 rounded-lg cursor-pointer">
-                Recherche par image
-                <input type="file" id="searchImage" accept="image/*" class="hidden">
-            </label>
+    <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
+      
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+        Contactez notre équipe
+      </h2>
+
+      <form class="space-y-5">
+        <!-- Nom -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Nom complet
+          </label>
+          <input
+            type="text"
+            placeholder="Jean Dupont"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
         </div>
-    </section>
 
-    <!--  PRODUITS  -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
-        <!--  PAGINATION AJOUTÉE -->
-        <div id="pagination" class="flex justify-center gap-2 mt-10 flex-wrap"></div>
-    </main>
-
-    <!--MODAL PRODUIT  -->
-    <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div class="bg-white p-6 rounded-lg w-96 relative">
-            <button id="closeModal" class="absolute top-2 right-2">X</button>
-            <img id="modalImage" class="w-full h-48 object-contain" />
-            <h2 id="modalName" class="text-xl font-bold mt-2"></h2>
-            <p id="modalPrice" class="text-gray-700 mt-1"></p>
-            <p id="modalDescription" class="text-gray-500 mt-2"></p> <!-- <-- ici -->
-            <button id="addToCartModal" class="mt-4 bg-black text-white py-2 w-full rounded">Ajouter au panier</button>
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Adresse email
+          </label>
+          <input
+            type="email"
+            placeholder="jean@email.com"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
         </div>
-    </div>
 
-
-    <!--  PANIER  -->
-    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-xl w-11/12 md:w-1/2 max-h-[80vh] overflow-y-auto relative">
-            <button id="closeCart" class="absolute top-2 right-3 text-xl">✕</button>
-            <h2 class="text-xl font-bold mb-4">Votre panier</h2>
-            <div id="cartItems" class="space-y-2"></div>
-            <p class="mt-4 font-bold">Total : <span id="cartTotal">0</span> FCFA</p>
-            <button id="checkout" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg">Payer & Générer
-                facture</button>
+        <!-- Sujet -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Sujet
+          </label>
+          <select
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option>Question sur une commande</option>
+            <option>Problème de livraison</option>
+            <option>Retour / Remboursement</option>
+            <option>Autre</option>
+          </select>
         </div>
-    </div>
 
-    <!-- TOAST  -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-black text-white px-4 py-2 rounded-lg opacity-0 transition">Message
+        <!-- Message -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Message
+          </label>
+          <textarea
+            rows="4"
+            placeholder="Décrivez votre demande..."
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <!-- Bouton -->
+        <button
+          type="submit"
+          class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-200"
+        >
+          Envoyer le message
+        </button>
+      </form>
+
     </div>
+  </div>
 
     <script src="/clients/client.js"></script>
 </body>
