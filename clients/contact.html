@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Buy Boutique</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <!--  NAVBAR  -->
+    <nav class="bg-white shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                    <span class="font-bold text-xl text-gray-700">E-Buy</span>
+                </div>
+
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="/clients/client.html" class="text-gray-600 hover:text-purple-600">Home</a>
+                    <a href="/clients/contact.html" class="text-gray-600 hover:text-purple-600">Contact</a>
+                    <button id="cartBtn"
+                        class="relative flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-1" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                        </svg>
+                        <span>Panier</span>
+                        <span id="cartCount"
+                            class="absolute -top-2 -right-2 bg-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                    </button>
+                    <button id="logoutBtn"
+                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition ">Déconnecter</button>
+
+
+                </div>
+
+                <!-- Mobile button -->
+                <button id="menuBtn" class="md:hidden p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <!-- Overlay -->
+                <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+                <!-- Mobile menu -->
+                <div id="mobileMenu"
+                    class="fixed top-0 right-0 h-full w-64 bg-white shadow-md transform translate-x-full transition-transform duration-300 z-50 md:hidden">
+                    <a href="/clients/client.html" class="block py-2 px-4 border-b">Home</a>
+                    <a href="#" class="block py-2 px-4 border-b">Contact</a>
+                    <div class="flex justify-center mt-2">
+                        <button id="cartBtn"
+                            class="relative flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-1" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                            </svg>
+                            <span>Panier</span>
+                            <span id="cartCount"
+                                class="absolute -top-2 -right-2 bg-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                        </button>
+                    </div>
+
+                    <button id="logoutBtn"
+                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition m-5">Déconnecte</button>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden bg-white px-6 pb-4 md:hidden">
+            <a href="/clients/client.html" class="block py-2">Home</a>
+            <a href="#" class="block py-2">Contact</a>
+            <button id="cartBtnMobile" class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg> (<span id="cartCountMobile">0</span>)
+            </button>
+        </div>
+    </nav>
+
+    <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
+      
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+        Contactez notre équipe
+      </h2>
+
+      <form class="space-y-5">
+        <!-- Nom -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Nom complet
+          </label>
+          <input
+            type="text"
+            placeholder="Jean Dupont"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Adresse email
+          </label>
+          <input
+            type="email"
+            placeholder="jean@email.com"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <!-- Sujet -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Sujet
+          </label>
+          <select
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option>Question sur une commande</option>
+            <option>Problème de livraison</option>
+            <option>Retour / Remboursement</option>
+            <option>Autre</option>
+          </select>
+        </div>
+
+        <!-- Message -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Message
+          </label>
+          <textarea
+            rows="4"
+            placeholder="Décrivez votre demande..."
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <!-- Bouton -->
+        <button
+          type="submit"
+          class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-200"
+        >
+          Envoyer le message
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+    <script src="/clients/client.js"></script>
+</body>
+
+</html>
