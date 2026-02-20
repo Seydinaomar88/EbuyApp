@@ -59,10 +59,10 @@ class ProductService {
     static init() {
         if (!localStorage.getItem("products")) {
             localStorage.setItem("products", JSON.stringify([
-                { id: 1, name: "chaussure Nike rouge", price: 10000, image: "./assets/products/shoes1.jpg", description: "Chaussure rouge confortable et stylée pour tous les jours." },
-                { id: 2, name: "chaussure Nike blanche", price: 15000, image: "./assets/products/shoes1-2.jpg", description: "Chaussure blanche légère et élégante." },
-                { id: 3, name: "chaussure Nike verte", price: 20000, image: "./assets/products/shoes1-1.jpg", description: "Chaussure verte résistante et moderne." },
-                { id: 4, name: "Chaussure marron", price: 20000, image: "./assets/products/shoes1-3.jpg", description: "Chaussure marron chic pour toutes occasions." },
+                { id: 1, name: "chaussure Nike rouge", price: 10000, image: "./assets/products/shoe1.jpg", description: "Chaussure rouge confortable et stylée pour tous les jours." },
+                { id: 2, name: "chaussure Nike blanche", price: 15000, image: "./assets/products/shoe1-2.jpg", description: "Chaussure blanche légère et élégante." },
+                { id: 3, name: "chaussure Nike verte", price: 20000, image: "./assets/products/shoe1-1.jpg", description: "Chaussure verte résistante et moderne." },
+                { id: 4, name: "Chaussure marron", price: 20000, image: "./assets/products/shoe1-3.jpg", description: "Chaussure marron chic pour toutes occasions." },
             ]));
         }
 
@@ -126,6 +126,25 @@ class CartService {
     }
 }
 
+/* FAVORIS */
+class FavoriteService {
+    constructor() {
+        this.favorites = JSON.parse(localStorage.getItem("ebuy_favorites") || "[]");
+    }
+
+    save() {
+        localStorage.setItem("ebuy_favorites", JSON.stringify(this.favorites));
+    }
+
+    add(product) {
+        const exists = this.favorites.find(p => p.id === product.id);
+        if (!exists) {
+            this.favorites.push(product);
+            this.save();
+        }
+    }
+}
+
 /* UI / LOGIQUE */
 class ShopApp {
     constructor() {
@@ -133,6 +152,7 @@ class ShopApp {
         this.products = ProductService.getAll();
         this.displayedProducts = [...this.products];
         this.cartService = new CartService();
+        this.favoriteService = new FavoriteService();
 
         this.currentPage = 1;
         this.itemsPerPage = 12;
@@ -198,36 +218,36 @@ class ShopApp {
     }
 
     searchByImage(event) {
+
         const file = event.target.files[0];
         if (!file) return;
 
         const fileName = file.name.toLowerCase();
+        const cleanName = fileName.replace(/\.[^/.]+$/, "");
 
-        /* Extraire les mots du nom du fichier */
-        const imageWords = fileName
-            .replace(/\.[^/.]+$/, "") // enlever extension
-            .split(/[\s-_]+/)         // séparer par espace, -, _
+        const words = cleanName
+            .split(/[\s-_]+/)
             .filter(w => w.length > 2);
 
         let results = [];
 
-        this.products.forEach(p => {
-            const productWords = p.name.toLowerCase().split(" ");
+        this.products.forEach(product => {
 
-            /* Vérifier si au moins 1 mot correspond */
-            const match = imageWords.some(imgWord =>
-                productWords.some(prodWord =>
-                    prodWord.includes(imgWord) || imgWord.includes(prodWord)
-                )
-            );
+            const text = (product.name + " " + product.description).toLowerCase();
 
-            if (match) results.push(p);
+            const match = words.some(word => text.includes(word));
+
+            if (match) {
+                results.push(product);
+            }
         });
 
-        /* Si aucun mot trouvé → afficher produit proche (fallback) */
+        // fallback intelligent
         if (results.length === 0) {
             results = this.products.filter(p =>
-                fileName.includes("shoe") || fileName.includes("chaussure")
+                cleanName.includes("nike") ||
+                cleanName.includes("shoe") ||
+                cleanName.includes("chaussure")
             );
         }
 
@@ -282,7 +302,19 @@ class ShopApp {
             const realIndex = this.displayedProducts.indexOf(p);
 
             card.querySelector(".add").onclick = () => this.addToCart(realIndex);
-            card.querySelector(".add-heart").onclick = () => this.addToCart(realIndex);
+            card.querySelector(".add-heart").onclick = () => {
+
+                const product = this.displayedProducts[realIndex];
+
+                const confirmAdd = confirm(
+                    `Voulez-vous ajouter "${product.name}" au favori ?`
+                );
+
+                if (confirmAdd) {
+                    this.favoriteService.add(product);
+                    alert("Produit ajouté aux favoris");
+                }
+            };
             card.querySelector(".details").onclick = () => this.openModal(realIndex);
             card.querySelector(".product-img").onclick = () => this.openModal(realIndex);
         });
@@ -388,24 +420,24 @@ class ShopApp {
         const primaryColor = [88, 80, 236];
         const gray = [120, 120, 120];
 
-        /*Titre*/ 
+        /*Titre*/
         doc.setFont("helvetica", "bold");
         doc.setFontSize(20);
         doc.setTextColor(...primaryColor);
         doc.text("FACTURE CLIENT", 105, 20, { align: "center" });
 
-        /*Ligne*/ 
+        /*Ligne*/
         doc.setDrawColor(...primaryColor);
         doc.line(20, 25, 190, 25);
 
-        /*Infos*/ 
+        /*Infos*/
         doc.setFontSize(10);
         doc.setTextColor(...gray);
         const date = new Date();
         doc.text(`Date : ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`, 20, 35);
         doc.text("E-Buy Shop", 150, 35);
 
-        /*Table*/ 
+        /*Table*/
         let y = 50;
         doc.setFont("helvetica", "bold");
         doc.setTextColor(0);
@@ -431,7 +463,7 @@ class ShopApp {
             y += 8;
         });
 
-        /*Total*/ 
+        /*Total*/
         y += 10;
         doc.setDrawColor(0);
         doc.line(110, y, 190, y);
@@ -439,7 +471,7 @@ class ShopApp {
         doc.setFontSize(14);
         doc.text(`TOTAL : ${total.toFixed(2)} FCFA`, 150, y + 10);
 
-        /*Footer*/ 
+        /*Footer*/
         doc.setFontSize(10);
         doc.setFont("helvetica", "italic");
         doc.setTextColor(...gray);
@@ -448,7 +480,7 @@ class ShopApp {
 
         doc.save("facture-ebuy.pdf");
 
-        /*ENREGISTRER LA VENTE AVEC DATE COMPLETE */ 
+        /*ENREGISTRER LA VENTE AVEC DATE COMPLETE */
         const sale = {
             id: Date.now(),
             date: new Date().toISOString(), // garde date + heure
@@ -465,7 +497,7 @@ class ShopApp {
         sales.push(sale);
         localStorage.setItem("sales", JSON.stringify(sales));
 
-        /*Reset panier*/ 
+        /*Reset panier*/
         this.cartService.clear();
         this.renderCart();
         this.updateCartCount();

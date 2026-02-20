@@ -143,52 +143,9 @@
     </div>
 </nav>
 
-    <!-- Recherche -->
-    <section class="pt-24 max-w-7xl mx-auto px-6">
-        <div class="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row gap-4 items-center">
-            <input id="searchText" type="text" placeholder="Rechercher un produit..."
-                class="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
-            <label class="flex items-center gap-2 border px-4 py-2 rounded-lg cursor-pointer">
-                Recherche par image
-                <input type="file" id="searchImage" accept="image/*" class="hidden">
-            </label>
-        </div>
-    </section>
-
-    <!--  PRODUITS  -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
-        <!--  PAGINATION AJOUTÉE -->
-        <div id="pagination" class="flex justify-center gap-2 mt-10 flex-wrap"></div>
-    </main>
-
-    <!--MODAL PRODUIT  -->
-    <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div class="bg-white p-6 rounded-lg w-96 relative">
-            <button id="closeModal" class="absolute top-2 right-2">X</button>
-            <img id="modalImage" class="w-full h-48 object-contain" />
-            <h2 id="modalName" class="text-xl font-bold mt-2"></h2>
-            <p id="modalPrice" class="text-gray-700 mt-1"></p>
-            <p id="modalDescription" class="text-gray-500 mt-2"></p> <!-- <-- ici -->
-            <button id="addToCartModal" class="mt-4 bg-black text-white py-2 w-full rounded">Ajouter au panier</button>
-        </div>
-    </div>
-
-
-    <!--  PANIER  -->
-    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-xl w-11/12 md:w-1/2 max-h-[80vh] overflow-y-auto relative">
-            <button id="closeCart" class="absolute top-2 right-3 text-xl">✕</button>
-            <h2 class="text-xl font-bold mb-4">Votre panier</h2>
-            <div id="cartItems" class="space-y-2"></div>
-            <p class="mt-4 font-bold">Total : <span id="cartTotal">0</span> FCFA</p>
-            <button id="checkout" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg">Payer & Générer
-                facture</button>
-        </div>
-    </div>
-
-    <!-- TOAST  -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-black text-white px-4 py-2 rounded-lg opacity-0 transition">Message
+    <div class="pt-24 max-w-7xl mx-auto px-6">
+        <h2 class="text-2xl font-bold mb-6">Mes Favoris </h2>
+        <div id="favoritesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </div>
 
 
@@ -266,6 +223,67 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const grid = document.getElementById("favoritesGrid");
+            const favorites = JSON.parse(localStorage.getItem("ebuy_favorites") || "[]");
+
+            if (favorites.length === 0) {
+                grid.innerHTML = "<p class='text-gray-500'>Aucun produit ajouté aux favoris.</p>";
+                return;
+            }
+
+            favorites.forEach((product, index) => {
+
+                const card = document.createElement("div");
+                card.className = "bg-white rounded-xl shadow-md p-6 flex flex-col";
+
+                card.innerHTML = `
+            <div class="flex justify-center">
+                <img src="${product.image}" class="w-full h-36 object-contain">
+            </div>
+            <div class="mt-4 flex-1">
+                <p class="font-semibold text-gray-700">${product.name}</p>
+                <p class="text-sm text-gray-500 mt-1">${product.description || ""}</p>
+                <p class="font-bold mt-2">${product.price} FCFA</p>
+            </div>
+            <div class="mt-4 flex gap-2">
+                <button class="flex-1 bg-black text-white py-2 rounded addToCart">Ajouter au panier</button>
+                <button class="flex-1 bg-red-600 text-white py-2 rounded removeFav">Supprimer</button>
+            </div>
+        `;
+
+                // Ajouter au panier
+                card.querySelector(".addToCart").onclick = () => {
+                    const cart = JSON.parse(localStorage.getItem("ebuy_cart") || "[]");
+
+                    const existing = cart.find(p => p.id === product.id);
+
+                    if (existing) {
+                        existing.quantity++;
+                    } else {
+                        cart.push({ ...product, quantity: 1 });
+                    }
+
+                    localStorage.setItem("ebuy_cart", JSON.stringify(cart));
+                    alert("Produit ajouté au panier");
+                };
+
+                // Supprimer des favoris
+                card.querySelector(".removeFav").onclick = () => {
+
+                    favorites.splice(index, 1);
+                    localStorage.setItem("ebuy_favorites", JSON.stringify(favorites));
+                    location.reload();
+                };
+
+                grid.appendChild(card);
+            });
+
+        });
+    </script>
 
     <script src="/clients/client.js"></script>
 </body>

@@ -2,172 +2,266 @@
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Buy Boutique</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Buy Boutique</title>
 
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body class="bg-gray-100">
 
-    <!--  NAVBAR  -->
-    <nav class="bg-white shadow-md fixed w-full z-50">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center gap-2">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                    <span class="font-bold text-xl text-gray-700">E-Buy</span>
-                </div>
+  <!--  NAVBAR  -->
+  <nav class="bg-white shadow-md fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex justify-between items-center h-16">
 
-                <div class="hidden md:flex items-center gap-6">
-                    <a href="/clients/client.html" class="text-gray-600 hover:text-purple-600">Home</a>
-                    <a href="/clients/contact.html" class="text-gray-600 hover:text-purple-600">Contact</a>
-                    <button id="cartBtn"
-                        class="relative flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-1" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                        </svg>
-                        <span>Panier</span>
-                        <span id="cartCount"
-                            class="absolute -top-2 -right-2 bg-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
-                    </button>
-                    <button id="logoutBtn"
-                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition ">Déconnecter</button>
-
-
-                </div>
-
-                <!-- Mobile button -->
-                <button id="menuBtn" class="md:hidden p-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-
-                <!-- Overlay -->
-                <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
-
-                <!-- Mobile menu -->
-                <div id="mobileMenu"
-                    class="fixed top-0 right-0 h-full w-64 bg-white shadow-md transform translate-x-full transition-transform duration-300 z-50 md:hidden">
-                    <a href="/clients/client.html" class="block py-2 px-4 border-b">Home</a>
-                    <a href="#" class="block py-2 px-4 border-b">Contact</a>
-                    <div class="flex justify-center mt-2">
-                        <button id="cartBtn"
-                            class="relative flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-1" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                            </svg>
-                            <span>Panier</span>
-                            <span id="cartCount"
-                                class="absolute -top-2 -right-2 bg-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
-                        </button>
-                    </div>
-
-                    <button id="logoutBtn"
-                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition m-5">Déconnecte</button>
-
-
-                </div>
-
-            </div>
+        <!-- LOGO -->
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500"></div>
+          <span class="font-bold text-xl text-gray-700">E-Buy</span>
         </div>
 
-        <div id="mobileMenu" class="hidden bg-white px-6 pb-4 md:hidden">
-            <a href="/clients/client.html" class="block py-2">Home</a>
-            <a href="#" class="block py-2">Contact</a>
-            <button id="cartBtnMobile" class="mt-2 w-full bg-purple-600 text-white py-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg> (<span id="cartCountMobile">0</span>)
-            </button>
-        </div>
-    </nav>
+        <!-- DESKTOP MENU -->
+        <div class="hidden md:flex items-center gap-6">
+          <a href="/clients/client.html" class="text-gray-600 hover:text-purple-600">Home</a>
 
-    <div class="min-h-screen flex items-center justify-center px-4">
-    <div class="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
-      
-      <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-        Contactez notre équipe
-      </h2>
+          <a href="/clients/favori.html" class="text-red-500 hover:text-red-600 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+              <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 
+                        1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 
+                        3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 
+                        9-12Z" />
+            </svg>
+          </a>
 
-      <form class="space-y-5">
-        <!-- Nom -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Nom complet
-          </label>
-          <input
-            type="text"
-            placeholder="Jean Dupont"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+          <a href="/clients/contact.html" class="text-gray-600 hover:text-purple-600">Contact</a>
 
-        <!-- Email -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Adresse email
-          </label>
-          <input
-            type="email"
-            placeholder="jean@email.com"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+          <button id="cartBtn"
+            class="relative flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 
+                            1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218
+                            c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 
+                            0 0 0-16.536-1.84M7.5 14.25 5.106 
+                            5.272M6 20.25a.75.75 0 1 1-1.5 0 
+                            .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 
+                            0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+            <span>Panier</span>
+            <span id="cartCount"
+              class="absolute -top-2 -right-2 bg-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center">
+              0
+            </span>
+          </button>
+
+          <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+            Déconnecter
+          </button>
         </div>
 
-        <!-- Sujet -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Sujet
-          </label>
-          <select
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            <option>Question sur une commande</option>
-            <option>Problème de livraison</option>
-            <option>Retour / Remboursement</option>
-            <option>Autre</option>
-          </select>
-        </div>
-
-        <!-- Message -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">
-            Message
-          </label>
-          <textarea
-            rows="4"
-            placeholder="Décrivez votre demande..."
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          ></textarea>
-        </div>
-
-        <!-- Bouton -->
-        <button
-          type="submit"
-          class="w-full bg-indigo-600 text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-200"
-        >
-          Envoyer le message
+        <!-- MOBILE BUTTON -->
+        <button id="menuBtn" class="md:hidden p-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
-      </form>
+
+      </div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40">
+    </div>
+
+    <!-- MOBILE MENU -->
+    <div id="mobileMenu" class="fixed top-0 right-0 h-full w-64 bg-white shadow-md
+        transform translate-x-full transition-transform duration-300
+        z-50 md:hidden p-4">
+
+      <a href="/clients/client.html" class="block py-3 border-b">Home</a>
+
+      <a href="/clients/favori.html" class="block py-3 border-b text-red-500">
+        Favoris
+      </a>
+
+      <a href="/clients/contact.html" class="block py-3 border-b">Contact</a>
+
+      <!-- PANIER MOBILE CORRIGÉ -->
+      <div class="mt-4">
+        <button id="cartBtnMobile"
+          class="relative w-full flex items-center justify-center gap-2 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700">
+
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 
+                        1.087.835l.383 1.437M7.5 
+                        14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218" />
+          </svg>
+
+          <span>Panier</span>
+
+          <span id="cartCountMobile"
+            class="absolute -top-2 -right-2 bg-red-600 text-xs w-5 h-5 rounded-full flex items-center justify-center">
+            0
+          </span>
+
+        </button>
+      </div>
+
+      <button id="logoutBtn" class="w-full mt-4 bg-red-600 text-white py-2 rounded hover:bg-red-700 transition">
+        Déconnecter
+      </button>
 
     </div>
-  </div>
+  </nav>
 
-    <script src="/clients/client.js"></script>
+  <section class="bg-gray-100 py-16 px-4">
+
+    <!-- Titre -->
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-gray-800">Contactez nous</h2>
+      <p class="text-gray-500 mt-2">Contactez nous pour plus d'informations.</p>
+      <div class="w-20 h-1 bg-orange-500 mx-auto mt-4 rounded"></div>
+    </div>
+
+    <!-- Infos contact -->
+    <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-center mb-12">
+
+      <div class="border-r md:pr-8">
+        <h3 class="text-xl font-semibold mb-3">ADRESSE</h3>
+        <p class="text-gray-600">
+          DAKAR SENEGAL Ngor Extension<br>
+          Lot N°430 TF 557 Dakar, Sénégal
+        </p>
+      </div>
+
+      <div class="border-r md:px-8">
+        <h3 class="text-xl font-semibold mb-3">Numéro de téléphone</h3>
+        <p class="text-blue-600 font-medium">
+          +221 33 000 00 00 <br>
+          +221 77 000 00 00
+        </p>
+      </div>
+
+      <div class="md:pl-8">
+        <h3 class="text-xl font-semibold mb-3">Email</h3>
+        <p class="text-blue-600 font-medium">
+          senegal@EbuyApp.org
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Formulaire -->
+    <div class="max-w-5xl mx-auto">
+      <form class="space-y-6">
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <input type="text" placeholder="Votre nom"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:outline-none" />
+
+          <input type="email" placeholder="Email"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:outline-none" />
+        </div>
+
+        <input type="text" placeholder="Objet de votre message"
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:outline-none" />
+
+        <textarea rows="6" placeholder="Message"
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:outline-none"></textarea>
+
+        <div class="text-center">
+          <button type="submit"
+            class="bg-orange-500 text-white px-10 py-3 rounded-full font-semibold hover:bg-orange-600 transition duration-300">
+            Envoyer
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </section>
+
+  <footer class=" bg-gray-100 text-gray-300 py-12 px-6 md:px-12 font-sans border-t border-gray-800 mt-5 ">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+
+      <div class="space-y-6 text-black font-bold">
+        <div class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500"></div>
+          <span class="font-bold text-xl text-gray-700">E-Buy</span>
+        </div>
+        <p class="text-sm leading-relaxed text-justify">
+          EbuyApp est une application de commerce électronique qui permet aux utilisateurs de découvrir,
+          comparer et acheter des produits en ligne. Elle offre une expérience utilisateur intuitive et
+          sécurisée pour les achats en ligne. </p>
+      </div>
+
+      <div>
+        <h3 class="text-black font-bold text-lg mb-4 border-b border-purple-600 pb-2 inline-block min-w-[100px]">
+          Menu</h3>
+        <ul class="space-y-4 mt-4">
+          <li class="flex items-center group cursor-pointer hover:text-purple-600 text-black">
+            <span class="mr-2 text-xs"></span>
+            <a href="#" class="text-sm">Politique en matière de cookies</a>
+          </li>
+          <li class="flex items-center group cursor-pointer hover:text-purple-600 text-black">
+            <span class="mr-2 text-xs">⌄</span>
+            <a href="#" class="text-sm ">Politique de Confidentialité</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-black font-bold text-lg mb-4 border-b border-purple-600 pb-2 inline-block min-w-[100px]">
+          Nous Contacter</h3>
+        <div class="mt-4 space-y-2 text-sm text-black">
+          <p class="font-bold uppercase text-gray-700">EbuyApp</p>
+          <p>Ngor Extension Lot N°430 TF 557</p>
+          <p>Dakar, Sénégal</p>
+          <p>Numéro : +221 33 000 00 00 / +221 77 000 00 00</p>
+          <p>Email : <a href="mailto:senegal@EbuyApp.org"
+              class="hover:text-purple-600 transition">senegal@EbuyApp.org</a></p>
+        </div>
+
+        <div class="flex space-x-3 mt-6">
+          <a href="#"
+            class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center hover:bg-blue-400 transition">
+            <i class="fab fa-twitter text-white text-xs"></i>
+          </a>
+          <a href="#"
+            class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center hover:bg-blue-600 transition">
+            <i class="fab fa-facebook-f text-white text-xs"></i>
+          </a>
+          <a href="#"
+            class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center hover:bg-pink-500 transition">
+            <i class="fab fa-instagram text-white text-xs"></i>
+          </a>
+          <a href="#"
+            class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center hover:bg-red-600 transition">
+            <i class="fab fa-google text-white text-xs"></i>
+          </a>
+          <a href="#"
+            class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center hover:bg-blue-700 transition">
+            <i class="fab fa-linkedin-in text-white text-xs"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-16 pt-8 border-t border-gray-800 text-center text-xs text-black">
+      <p>© Copyright <span class="font-bold">EbuyApp</span> by senegal</p>
+    </div>
+  </footer>
+
+  <script src="/clients/client.js"></script>
 </body>
 
 </html>
