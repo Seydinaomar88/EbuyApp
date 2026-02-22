@@ -1,7 +1,33 @@
+// =======================
+// INITIALISATION ADMIN
+// =======================
+
+function initAdmin() {
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const adminExists = users.find(
+  user => user.email === "admintest@admin.com"
+);
+
+  if (!adminExists) {
+    users.push({
+      email: "admintest@admin.com",
+      password: btoa("admin123"),
+      role: "admin"
+    });
+
+    localStorage.setItem("users", JSON.stringify(users));
+    console.log("Admin créé automatiquement");
+  }
+}
+
+initAdmin();
+
 
 // =======================
 // OUTILS
 // =======================
+
 function getUsers() {
   return JSON.parse(localStorage.getItem("users")) || [];
 }
@@ -11,12 +37,14 @@ function saveUsers(users) {
 }
 
 function hashPassword(password) {
-  return btoa(password); // simulation de hash (prototype)
+  return btoa(password); // simulation hash
 }
 
-/* =========================
-   INSCRIPTION
-========================= */
+
+// =========================
+// INSCRIPTION
+// =========================
+
 const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
@@ -27,7 +55,7 @@ if (registerForm) {
     const password = document.getElementById("password").value;
     const role = document.getElementById("role").value;
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let users = getUsers();
 
     const userExists = users.find(user => user.email === email);
     if (userExists) {
@@ -35,17 +63,30 @@ if (registerForm) {
       return;
     }
 
-    users.push({ email, password, role });
-    localStorage.setItem("users", JSON.stringify(users));
+    // 🔒 Empêcher création admin via formulaire
+    if (role === "admin") {
+      alert("Création d'admin interdite");
+      return;
+    }
+
+    users.push({
+      email,
+      password: hashPassword(password),
+      role
+    });
+
+    saveUsers(users);
 
     alert("Compte créé avec succès");
-    window.location.href = "../index.html"; // retour connexion
+    window.location.href = "../index.html";
   });
 }
 
-/* =========================
-   CONNEXION
-========================= */
+
+// =========================
+// CONNEXION
+// =========================
+
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -53,11 +94,9 @@ if (loginForm) {
     e.preventDefault();
 
     const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
+    const password = hashPassword(document.getElementById("loginPassword").value);
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    console.log("Utilisateurs enregistrés :", users);
+    const users = getUsers();
 
     const user = users.find(
       u => u.email === email && u.password === password
@@ -84,6 +123,7 @@ if (loginForm) {
 // =======================
 // PROTECTION DES PAGES
 // =======================
+
 function protectPage(requiredRole = null) {
   const user = JSON.parse(localStorage.getItem("connectedUser"));
 
@@ -98,9 +138,11 @@ function protectPage(requiredRole = null) {
   }
 }
 
+
 // =======================
 // DÉCONNEXION
 // =======================
+
 function logout() {
   localStorage.removeItem("connectedUser");
   window.location.href = "../index.html";

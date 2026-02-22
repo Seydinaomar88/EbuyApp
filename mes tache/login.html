@@ -114,7 +114,7 @@
         >
           <option value="client">Client</option>
           <option value="vendeur">Vendeur</option>
-          <option value="admin">Admin</option>
+          <!-- <option value="admin">Admin</option> -->
         </select>
       </div>
 
@@ -189,10 +189,10 @@
     }
 
     if (age < 16) {
-      ageMessage.textContent = "You must be at least 16 years old ❌";
+      ageMessage.textContent = "You must be at least 16 years old ";
       ageMessage.className = "text-xs mt-1 text-red-500";
     } else {
-      ageMessage.textContent = "Age verified ✅";
+      ageMessage.textContent = "Age verified ";
       ageMessage.className = "text-xs mt-1 text-green-500";
     }
   }
