@@ -6,8 +6,8 @@ function initAdmin() {
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
   const adminExists = users.find(
-  user => user.email === "admintest@admin.com"
-);
+    user => user.email === "admintest@admin.com"
+  );
 
   if (!adminExists) {
     users.push({
@@ -63,7 +63,6 @@ if (registerForm) {
       return;
     }
 
-    // 🔒 Empêcher création admin via formulaire
     if (role === "admin") {
       alert("Création d'admin interdite");
       return;
@@ -78,6 +77,8 @@ if (registerForm) {
     saveUsers(users);
 
     alert("Compte créé avec succès");
+
+    // 🔥 Redirection correcte GitHub Pages
     window.location.href = "../index.html";
   });
 }
@@ -94,7 +95,9 @@ if (loginForm) {
     e.preventDefault();
 
     const email = document.getElementById("loginEmail").value.trim();
-    const password = hashPassword(document.getElementById("loginPassword").value);
+    const password = hashPassword(
+      document.getElementById("loginPassword").value
+    );
 
     const users = getUsers();
 
@@ -109,12 +112,15 @@ if (loginForm) {
 
     localStorage.setItem("connectedUser", JSON.stringify(user));
 
+    // 🔥 REDIRECTIONS CORRIGÉES
     if (user.role === "admin") {
-      window.location.href = "admin.html";
-    } else if (user.role === "vendeur") {
-      window.location.href = "/vendeur/vendeur.html";
-    } else {
-      window.location.href = "/clients/client.html";
+      window.location.href = "../admin/admin.html";
+    } 
+    else if (user.role === "vendeur") {
+      window.location.href = "../vendeur/vendeur.html";
+    } 
+    else {
+      window.location.href = "../clients/client.html";
     }
   });
 }
@@ -128,13 +134,13 @@ function protectPage(requiredRole = null) {
   const user = JSON.parse(localStorage.getItem("connectedUser"));
 
   if (!user) {
-    window.location.href = "login.html";
+    window.location.href = "../index.html";
     return;
   }
 
   if (requiredRole && user.role !== requiredRole) {
     alert("Accès refusé");
-    window.location.href = "login.html";
+    window.location.href = "../index.html";
   }
 }
 
