@@ -79,7 +79,7 @@ if (registerForm) {
     alert("Compte créé avec succès");
 
     // 🔥 Redirection correcte GitHub Pages
-    window.location.href = "../index.html";
+    window.location.href = "./index.html";
   });
 }
 
@@ -112,15 +112,15 @@ if (loginForm) {
 
     localStorage.setItem("connectedUser", JSON.stringify(user));
 
-    // 🔥 REDIRECTIONS CORRIGÉES
+    // 🔥 REDIRECTIONS CORRIGÉES pour GitHub Pages
     if (user.role === "admin") {
-      window.location.href = "../admin/admin.html";
+      window.location.href = "./admin/admin.html";
     } 
     else if (user.role === "vendeur") {
-      window.location.href = "../vendeur/vendeur.html";
+      window.location.href = "./vendeur/vendeur.html";
     } 
     else {
-      window.location.href = "../clients/client.html";
+      window.location.href = "./clients/client.html";
     }
   });
 }
@@ -134,13 +134,13 @@ function protectPage(requiredRole = null) {
   const user = JSON.parse(localStorage.getItem("connectedUser"));
 
   if (!user) {
-    window.location.href = "../index.html";
+    window.location.href = "./index.html";
     return;
   }
 
   if (requiredRole && user.role !== requiredRole) {
     alert("Accès refusé");
-    window.location.href = "../index.html";
+    window.location.href = "./index.html";
   }
 }
 
@@ -151,5 +151,5 @@ function protectPage(requiredRole = null) {
 
 function logout() {
   localStorage.removeItem("connectedUser");
-  window.location.href = "../index.html";
+  window.location.href = "./index.html";
 }
