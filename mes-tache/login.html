@@ -114,7 +114,6 @@
         >
           <option value="client">Client</option>
           <option value="vendeur">Vendeur</option>
-          <!-- <option value="admin">Admin</option> -->
         </select>
       </div>
 
@@ -129,7 +128,7 @@
       <!-- Link back to login -->
       <p class="text-center text-sm mt-2">
         Déjà un compte ?
-        <a href="../index.html" class="text-blue-600 hover:underline">
+        <a href="./mes-tache/login.html" class="text-blue-600 hover:underline">
           Se connecter
         </a>
       </p>
@@ -138,74 +137,67 @@
   </div>
 
   <!-- JS -->
-  <script src="./mes-tache/login.html"></script>
+  <script>
+    const daySelect = document.getElementById("day");
+    const monthSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+    const ageMessage = document.getElementById("ageMessage");
+
+    // Jours
+    for (let d = 1; d <= 31; d++) {
+      daySelect.innerHTML += `<option value="${d}">${d}</option>`;
+    }
+
+    // Mois
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    months.forEach((month, index) => {
+      monthSelect.innerHTML += `<option value="${index + 1}">${month}</option>`;
+    });
+
+    // Années (de maintenant à 1900)
+    const currentYear = new Date().getFullYear();
+    for (let y = currentYear; y >= 1900; y--) {
+      yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+    }
+
+    // Vérifier l'âge
+    function checkAge() {
+      const day = daySelect.value;
+      const month = monthSelect.value;
+      const year = yearSelect.value;
+
+      if (!day || !month || !year) return;
+
+      const birthDate = new Date(year, month - 1, day);
+      const today = new Date();
+
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      if (age < 16) {
+        ageMessage.textContent = "You must be at least 16 years old ";
+        ageMessage.className = "text-xs mt-1 text-red-500";
+      } else {
+        ageMessage.textContent = "Age verified ";
+        ageMessage.className = "text-xs mt-1 text-green-500";
+      }
+    }
+
+    daySelect.addEventListener("change", checkAge);
+    monthSelect.addEventListener("change", checkAge);
+    yearSelect.addEventListener("change", checkAge);
+  </script>
+
+  <!-- Auth JS -->
+  <script src="./mes-tache/auth.js"></script>
 
 </body>
 </html>
-
-<script>
-  const daySelect = document.getElementById("day");
-  const monthSelect = document.getElementById("month");
-  const yearSelect = document.getElementById("year");
-  const ageMessage = document.getElementById("ageMessage");
-
-  // Jours
-  for (let d = 1; d <= 31; d++) {
-    daySelect.innerHTML += `<option value="${d}">${d}</option>`;
-  }
-
-  // Mois
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  months.forEach((month, index) => {
-    monthSelect.innerHTML += `<option value="${index + 1}">${month}</option>`;
-  });
-
-  // Années (de maintenant à 1900)
-  const currentYear = new Date().getFullYear();
-  for (let y = currentYear; y >= 1900; y--) {
-    yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
-  }
-
-  // Vérifier l'âge
-  function checkAge() {
-    const day = daySelect.value;
-    const month = monthSelect.value;
-    const year = yearSelect.value;
-
-    if (!day || !month || !year) return;
-
-    const birthDate = new Date(year, month - 1, day);
-    const today = new Date();
-
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-
-    if (age < 16) {
-      ageMessage.textContent = "You must be at least 16 years old ";
-      ageMessage.className = "text-xs mt-1 text-red-500";
-    } else {
-      ageMessage.textContent = "Age verified ";
-      ageMessage.className = "text-xs mt-1 text-green-500";
-    }
-  }
-
-  daySelect.addEventListener("change", checkAge);
-  monthSelect.addEventListener("change", checkAge);
-  yearSelect.addEventListener("change", checkAge);
-</script>
-
-<script src="./mes-tache/auth.js"></script>
-</body>
-</html>
-
-
-
-
