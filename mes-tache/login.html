@@ -31,6 +31,7 @@
       <div>
         <label class="text-sm text-gray-600">First name</label>
         <input
+          id="firstName"
           type="text"
           placeholder="Enter first name"
           class="w-full border rounded px-3 py-2 mt-1 text-sm"
@@ -42,6 +43,7 @@
       <div>
         <label class="text-sm text-gray-600">Last name</label>
         <input
+          id="lastName"
           type="text"
           placeholder="Enter last name"
           class="w-full border rounded px-3 py-2 mt-1 text-sm"
@@ -88,23 +90,6 @@
         </p>
       </div>
 
-      <!-- Interests -->
-      <div>
-        <p class="text-sm text-gray-600 mb-2">
-          Mostly interested in (Optional)
-        </p>
-        <div class="flex gap-4 text-sm">
-          <label class="flex items-center gap-2">
-            <input type="radio" name="interest" value="Womenswear">
-            Womenswear
-          </label>
-          <label class="flex items-center gap-2">
-            <input type="radio" name="interest" value="Menswear">
-            Menswear
-          </label>
-        </div>
-      </div>
-
       <!-- Role -->
       <div>
         <label class="text-sm text-gray-600">Role</label>
@@ -128,13 +113,14 @@
       <!-- Link back to login -->
       <p class="text-center text-sm mt-2">
         Déjà un compte ?
-        <a href="./mes-tache/login.html" class="text-blue-600 hover:underline">Se connecter</a>
+        <a href="../index.html" class="text-blue-600 hover:underline">
+          Se connecter
+        </a>
       </p>
 
     </form>
   </div>
 
-  <!-- JS -->
   <script>
     const daySelect = document.getElementById("day");
     const monthSelect = document.getElementById("month");
@@ -156,13 +142,12 @@
       monthSelect.innerHTML += `<option value="${index + 1}">${month}</option>`;
     });
 
-    // Années (de maintenant à 1900)
+    // Années
     const currentYear = new Date().getFullYear();
     for (let y = currentYear; y >= 1900; y--) {
       yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
     }
 
-    // Vérifier l'âge
     function checkAge() {
       const day = daySelect.value;
       const month = monthSelect.value;
@@ -181,10 +166,10 @@
       }
 
       if (age < 16) {
-        ageMessage.textContent = "You must be at least 16 years old ";
+        ageMessage.textContent = "You must be at least 16 years old";
         ageMessage.className = "text-xs mt-1 text-red-500";
       } else {
-        ageMessage.textContent = "Age verified ";
+        ageMessage.textContent = "Age verified";
         ageMessage.className = "text-xs mt-1 text-green-500";
       }
     }
@@ -194,7 +179,7 @@
     yearSelect.addEventListener("change", checkAge);
   </script>
 
-  <!-- Auth JS -->
+  <!-- IMPORTANT : auth.js est dans le même dossier -->
   <script src="./auth.js"></script>
 
 </body>
