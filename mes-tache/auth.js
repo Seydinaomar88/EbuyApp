@@ -114,7 +114,7 @@ if (loginForm) {
 
     // 🔥 REDIRECTIONS CORRIGÉES pour GitHub Pages
     if (user.role === "admin") {
-      window.location.href = "./admin/admin.html";
+      window.location.href = "./admin-dashboard.html";
     } 
     else if (user.role === "vendeur") {
       window.location.href = "./vendeur/vendeur.html";
