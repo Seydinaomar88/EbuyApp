@@ -29,27 +29,21 @@ overlay.addEventListener("click", () => {
     icon.setAttribute("d", "M4 6h16M4 12h16M4 18h16");
 });
 
-const logoutBtn = document.getElementById("logoutBtn");
+const logoutBtns = [
+    document.getElementById("logoutBtn"),        // desktop
+    document.getElementById("logoutBtnMobile")   // mobile
+];
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-        /*Supprimer utilisateur connecté*/
-        localStorage.removeItem("connectedUser");
-
-        /*(Optionnel) Vider le panier*/
-        localStorage.removeItem("ebuy_cart");
-
-        /*(Optionnel) fermer toutes les modales*/
-        if (typeof app !== "undefined") {
-            app.cartService.clear();
-        }
-
-        alert("Vous êtes déconnecté");
-
-        /*Redirection vers login*/
-        window.location.href = "../index.html";
-    });
-}
+logoutBtns.forEach(btn => {
+    if (btn) {
+        btn.addEventListener("click", () => {
+            localStorage.removeItem("connectedUser");
+            localStorage.removeItem("ebuy_cart");
+            alert("Vous êtes déconnecté");
+            window.location.href = "../index.html";
+        });
+    }
+});
 
 function loadClientBanners() {
     const banners = JSON.parse(localStorage.getItem("ebuy_banners") || "[]");
@@ -281,6 +275,15 @@ class ShopApp {
             this.cartModal.classList.remove("hidden");
         };
 
+        const cartMobile = document.getElementById("cartBtnMobile");
+
+        if (cartMobile) {
+            cartMobile.onclick = () => {
+                this.renderCart();
+                this.cartModal.classList.remove("hidden");
+            };
+        }
+
         document.getElementById("closeCart").onclick = () =>
             this.cartModal.classList.add("hidden");
 
@@ -365,47 +368,47 @@ class ShopApp {
         this.renderProducts();
     }
 
-   renderProducts() {
-    this.grid.innerHTML = "";
+    renderProducts() {
+        this.grid.innerHTML = "";
 
-    if (this.displayedProducts.length === 0) {
-        this.grid.innerHTML =
-            "<p class='col-span-full text-center'>Aucun produit trouvé</p>";
-        if (this.pagination) this.pagination.innerHTML = "";
-        return;
-    }
+        if (this.displayedProducts.length === 0) {
+            this.grid.innerHTML =
+                "<p class='col-span-full text-center'>Aucun produit trouvé</p>";
+            if (this.pagination) this.pagination.innerHTML = "";
+            return;
+        }
 
-    //  PAGINATION
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    const paginatedProducts = this.displayedProducts.slice(start, end);
+        //  PAGINATION
+        const start = (this.currentPage - 1) * this.itemsPerPage;
+        const end = start + this.itemsPerPage;
+        const paginatedProducts = this.displayedProducts.slice(start, end);
 
-    //  Catégories uniques SUR LA PAGE ACTUELLE
-    const categories = [
-        ...new Set(paginatedProducts.map((p) => p.category)),
-    ];
+        //  Catégories uniques SUR LA PAGE ACTUELLE
+        const categories = [
+            ...new Set(paginatedProducts.map((p) => p.category)),
+        ];
 
-    categories.forEach((category) => {
+        categories.forEach((category) => {
 
-        // Titre catégorie
-        const title = document.createElement("h2");
-        title.className =
-            "col-span-full text-2xl font-bold mt-10 mb-6 border-b pb-2";
-        title.textContent = "Catégorie : " + category;
-        this.grid.appendChild(title);
+            // Titre catégorie
+            const title = document.createElement("h2");
+            title.className =
+                "col-span-full text-2xl font-bold mt-10 mb-6 border-b pb-2";
+            title.textContent = "Catégorie : " + category;
+            this.grid.appendChild(title);
 
-        // Produits de cette catégorie (sur la page actuelle)
-        const categoryProducts = paginatedProducts.filter(
-            (p) => p.category === category
-        );
+            // Produits de cette catégorie (sur la page actuelle)
+            const categoryProducts = paginatedProducts.filter(
+                (p) => p.category === category
+            );
 
-        categoryProducts.forEach((product) => {
+            categoryProducts.forEach((product) => {
 
-            const card = document.createElement("div");
-            card.className =
-                "bg-white rounded-xl shadow-md p-6 flex flex-col hover:shadow-xl transition relative";
+                const card = document.createElement("div");
+                card.className =
+                    "bg-white rounded-xl shadow-md p-6 flex flex-col hover:shadow-xl transition relative";
 
-            card.innerHTML = `
+                card.innerHTML = `
                 <div class="flex justify-center mt-3 cursor-pointer product-img">
                     <img src="${product.image}" class="w-full h-36 object-contain">
                 </div>
@@ -438,43 +441,43 @@ class ShopApp {
                 </div>
             `;
 
-            this.grid.appendChild(card);
+                this.grid.appendChild(card);
 
-            const realIndex = this.displayedProducts.indexOf(product);
+                const realIndex = this.displayedProducts.indexOf(product);
 
-            // Ajouter au panier
-            card.querySelector(".add").onclick = () =>
-                this.addToCart(realIndex);
+                // Ajouter au panier
+                card.querySelector(".add").onclick = () =>
+                    this.addToCart(realIndex);
 
-            // Ajouter aux favoris
-            card.querySelector(".add-heart").onclick = () => {
-                const confirmAdd = confirm(
-                    `Voulez-vous ajouter "${product.name}" aux favoris ?`
-                );
-                if (confirmAdd) {
-                    this.favoriteService.add(product);
-                    alert(`${product.name} ajouté aux favoris !`);
-                }
-            };
+                // Ajouter aux favoris
+                card.querySelector(".add-heart").onclick = () => {
+                    const confirmAdd = confirm(
+                        `Voulez-vous ajouter "${product.name}" aux favoris ?`
+                    );
+                    if (confirmAdd) {
+                        this.favoriteService.add(product);
+                        alert(`${product.name} ajouté aux favoris !`);
+                    }
+                };
 
-            // Détails
-            card.querySelector(".details").onclick = () =>
-                this.openModal(realIndex);
+                // Détails
+                card.querySelector(".details").onclick = () =>
+                    this.openModal(realIndex);
 
-            card.querySelector(".product-img").onclick = () =>
-                this.openModal(realIndex);
+                card.querySelector(".product-img").onclick = () =>
+                    this.openModal(realIndex);
+            });
         });
-    });
 
-    // 🔥 Pagination affichée seulement si nécessaire
-    if (this.pagination) {
-        if (this.displayedProducts.length > this.itemsPerPage) {
-            this.renderPagination();
-        } else {
-            this.pagination.innerHTML = "";
+        //  Pagination affichée seulement si nécessaire
+        if (this.pagination) {
+            if (this.displayedProducts.length > this.itemsPerPage) {
+                this.renderPagination();
+            } else {
+                this.pagination.innerHTML = "";
+            }
         }
     }
-}
 
     renderPagination() {
         this.pagination.innerHTML = "";

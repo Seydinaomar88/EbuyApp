@@ -173,3 +173,33 @@ class SalesApp {
 document.addEventListener("DOMContentLoaded", () => {
     new SalesApp();
 });
+
+// =======================
+// SIDEBAR MOBILE
+// =======================
+
+const sidebar = document.getElementById("sidebar");
+const openBtn = document.getElementById("openSidebar");
+const closeBtn = document.getElementById("closeSidebar");
+const overlay = document.getElementById("overlay");
+
+if (openBtn) {
+  openBtn.addEventListener("click", () => {
+    sidebar.classList.remove("-translate-x-full");
+    overlay.classList.remove("hidden");
+  });
+}
+
+if (closeBtn) {
+  closeBtn.addEventListener("click", () => {
+    sidebar.classList.add("-translate-x-full");
+    overlay.classList.add("hidden");
+  });
+}
+
+if (overlay) {
+  overlay.addEventListener("click", () => {
+    sidebar.classList.add("-translate-x-full");
+    overlay.classList.add("hidden");
+  });
+}
