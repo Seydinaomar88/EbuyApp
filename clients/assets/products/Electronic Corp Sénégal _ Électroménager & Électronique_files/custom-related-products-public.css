@@ -1,0 +1,80 @@
+/* Theme compatibility styles for Related Products Block and Wrapper */
+.wp-block-wt-related-products,
+.wt-related-products-wrapper {
+    display: block !important;
+    width: 100% !important;
+    clear: both !important;
+    float: none !important;
+    margin: 2em 0;
+}
+
+.woocommerce-page .wt-related-products-cart .wt-related-products ul.products.columns-3 li.product:nth-child(3n) {
+    margin-right: 0 !important;
+}
+
+.woocommerce .wp-block-wt-related-products .wt-related-products ul.products.columns-3 li.product:nth-child(3n),
+.woocommerce-page .wp-block-wt-related-products .wt-related-products ul.products.columns-3 li.product:nth-child(3n) {
+    margin-right: 0;
+}
+
+/* Override Divi specific styles while maintaining responsive grid */
+.et_pb_gutters3.et_right_sidebar.woocommerce-page #main-content .wt-related-products.wt-related-products-cart .products li.product:nth-child(3n) {
+    margin-right: 0;
+}
+
+/* related products widget for product page */
+.wt-related-products {
+    width: var(--theme-container-width, 100%) !important;
+    max-width: var(--theme-block-max-width, 100%) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    padding-left: var(--theme-block-padding, 0);
+    padding-right: var(--theme-block-padding, 0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.wt-related-products .woocommerce-loop-product__title {
+    font-size: var(--theme-font-size, 1em);
+    line-height: var(--theme-line-height, 1.5);
+    margin: var(--theme-margin, 0.5em 0);
+}
+
+/* Remove bullet points from slider items */
+.wt-related-products ul.products,
+.wt-related-products .owl-carousel {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.wt-related-products ul.products li.product,
+.wt-related-products .owl-carousel li.product {
+    list-style: none !important;
+}
+
+/* Slider styles */
+.wt-related-products .carousel-wrap {
+    position: relative;
+    margin: 0 -15px;
+    padding: 0 15px;
+}
+
+/* Fix for bullet points in various themes */
+.wt-related-products.products ul,
+.wt-related-products ul.products {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.wt-related-products.products ul li,
+.wt-related-products ul.products li {
+    list-style: none !important;
+}
+
+.wt-related-products a {
+    text-decoration: none !important;
+}
+

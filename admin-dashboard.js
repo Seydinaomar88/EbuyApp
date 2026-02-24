@@ -2,16 +2,16 @@
 const STORAGE_KEYS = typeof EBUY_STORAGE !== 'undefined' && EBUY_STORAGE.keys
   ? { ...EBUY_STORAGE.keys, adminUserStatus: 'ebuy_admin_user_status', adminProductStatus: 'ebuy_admin_product_status' }
   : {
-      users: 'ebuy_users',
-      products: 'ebuy_products',
-      categories: 'ebuy_categories',
-      orders: 'ebuy_orders',
-      banners: 'ebuy_banners',
-      featured: 'ebuy_featured',
-      adminSession: 'ebuy_admin_session',
-      adminUserStatus: 'ebuy_admin_user_status',
-      adminProductStatus: 'ebuy_admin_product_status'
-    };
+    users: 'ebuy_users',
+    products: 'ebuy_products',
+    categories: 'ebuy_categories',
+    orders: 'ebuy_orders',
+    banners: 'ebuy_banners',
+    featured: 'ebuy_featured',
+    adminSession: 'ebuy_admin_session',
+    adminUserStatus: 'ebuy_admin_user_status',
+    adminProductStatus: 'ebuy_admin_product_status'
+  };
 
 let salesChart = null;
 let productStatusChart = null;
@@ -226,7 +226,7 @@ function refreshDashboard() {
   document.getElementById('sales-summary').innerHTML = `
     <p><strong>Nombre de commandes :</strong> ${orders.length}</p>
     <p class="mt-1"><strong>Chiffre d'affaires total :</strong> ${totalSales.toFixed(2)} FCFA</p>
-  `; 
+  `;
   renderCharts(orders, products);
 }
 
@@ -245,7 +245,7 @@ function renderUsers() {
 
   users.forEach(u => {
     const tr = document.createElement('tr');
-    tr.innerHTML =` 
+    tr.innerHTML = ` 
       <td class="px-4 py-3 text-sm">${u.email || u.phone || '-'}</td>
       <td class="px-4 py-3 text-sm">${u.name || '-'}</td>
       <td class="px-4 py-3"><span class="px-2 py-0.5 rounded text-xs font-medium ${u.role === 'vendeur' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}">${u.role || 'client'}</span></td>
@@ -329,19 +329,51 @@ function initProductFilters() {
 }
 
 function renderCategories() {
-  const categories = getJSON(STORAGE_KEYS.categories);
-  const list = document.getElementById('categories-list');
-  const empty = document.getElementById('categories-empty');
-  list.innerHTML = '';
-  if (categories.length === 0) { empty.classList.remove('hidden'); return; }
-  empty.classList.add('hidden');
-  categories.forEach(c => {
-    const li = document.createElement('li');
-    li.className = 'flex items-center justify-between px-4 py-3 hover:bg-slate-50';
-    li.innerHTML = `<span class="font-medium">${c.name}</span><span class="text-slate-500 text-sm">${c.slug || ''}</span><button class="delete-category text-red-600 text-sm font-medium hover:underline" data-id="${c.id}">Supprimer</button>`;
-    list.appendChild(li);
+  const products = getProductsForAdmin(); // récupère produits client
+  const tbody = document.getElementById("categories-table-body");
+  const empty = document.getElementById("categories-empty");
+
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  // Extraire catégories uniques depuis produits
+  const categoriesMap = new Map();
+
+  products.forEach(p => {
+    if (!p.category) return;
+
+    if (!categoriesMap.has(p.category)) {
+      categoriesMap.set(p.category, {
+        name: p.category,
+        slug: p.category.toLowerCase().replace(/\s+/g, "-")
+      });
+    }
   });
-  list.querySelectorAll('.delete-category').forEach(btn => btn.addEventListener('click', () => deleteCategory(btn.dataset.id)));
+
+  const categories = Array.from(categoriesMap.values());
+
+  if (categories.length === 0) {
+    empty.classList.remove("hidden");
+    return;
+  }
+
+  empty.classList.add("hidden");
+
+  categories.forEach(c => {
+    const tr = document.createElement("tr");
+    tr.className = "hover:bg-slate-50 transition";
+
+    tr.innerHTML = `
+      <td class="px-4 py-3 font-medium">${c.name}</td>
+      <td class="px-4 py-3 text-sm text-slate-500">${c.slug}</td>
+      <td class="px-4 py-3 text-right">
+        <span class="text-xs text-slate-400">Auto-généré depuis produits</span>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
 }
 
 function deleteCategory(id) {
@@ -354,17 +386,42 @@ function deleteCategory(id) {
 }
 
 function initCategoryForm() {
-  document.getElementById('form-category').addEventListener('submit', (e) => {
+  const form = document.getElementById("form-category");
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const name = document.getElementById('category-name').value.trim();
-    let slug = document.getElementById('category-slug').value.trim();
+
+    const nameInput = document.getElementById("category-name");
+    const slugInput = document.getElementById("category-slug");
+
+    if (!nameInput) return;
+
+    const name = nameInput.value.trim();
+    let slug = slugInput?.value.trim() || "";
+
     if (!name) return;
-    if (!slug) slug = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    const categories = getJSON(STORAGE_KEYS.categories);
-    categories.push({ id: 'c' + Date.now(), name, slug });
+
+    if (!slug) {
+      slug = name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+    }
+
+    const categories = getJSON(STORAGE_KEYS.categories) || [];
+
+    categories.push({
+      id: "c" + Date.now(),
+      name,
+      slug
+    });
+
     setJSON(STORAGE_KEYS.categories, categories);
-    document.getElementById('category-name').value = '';
-    document.getElementById('category-slug').value = '';
+
+    nameInput.value = "";
+    if (slugInput) slugInput.value = "";
+
     renderCategories();
   });
 }
@@ -408,34 +465,42 @@ function renderContent() {
   }));
 }
 
-function initContentForms() {
-  document.getElementById('form-banner').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const title = document.getElementById('banner-title').value.trim();
-    const imageUrl = document.getElementById('banner-url').value.trim();
-    const link = document.getElementById('banner-link').value.trim();
-    if (!title || !imageUrl) return;
-    const banners = getJSON(STORAGE_KEYS.banners);
-    banners.push({ id: 'b' + Date.now(), title, imageUrl, link: link || '#' });
-    setJSON(STORAGE_KEYS.banners, banners);
-    document.getElementById('banner-title').value = '';
-    document.getElementById('banner-url').value = '';
-    document.getElementById('banner-link').value = '';
-    renderContent();
+document.getElementById('form-banner').addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const title = document.getElementById('banner-title').value.trim();
+  const fileInput = document.getElementById('banner-image');
+  const link = document.getElementById('banner-link').value.trim();
+
+  if (!title || !fileInput.files.length) return;
+
+  const banners = JSON.parse(localStorage.getItem('ebuy_banners') || '[]');
+
+  Array.from(fileInput.files).forEach(file => {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      banners.push({
+        id: 'b' + Date.now() + Math.random(),
+        title,
+        imageUrl: event.target.result,
+        link: link || '#'
+      });
+
+      localStorage.setItem('ebuy_banners', JSON.stringify(banners));
+    };
+
+    reader.readAsDataURL(file);
   });
-  document.getElementById('form-featured').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const label = document.getElementById('featured-label').value.trim();
-    const productOrLink = document.getElementById('featured-id').value.trim();
-    if (!label || !productOrLink) return;
-    const featured = getJSON(STORAGE_KEYS.featured);
-    featured.push({ id: 'f' + Date.now(), label, productOrLink });
-    setJSON(STORAGE_KEYS.featured, featured);
-    document.getElementById('featured-label').value = '';
-    document.getElementById('featured-id').value = '';
-    renderContent();
-  });
-}
+
+  document.getElementById('banner-title').value = '';
+  document.getElementById('banner-link').value = '';
+  fileInput.value = '';
+
+  setTimeout(() => {
+    alert("Bannières ajoutées avec succès !");
+  }, 500);
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   const adminUser = requireAdminOrRedirect();
@@ -445,6 +510,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initUserFilters();
   initProductFilters();
   initCategoryForm();
-  initContentForms();
+  // initContentForms();
   refreshDashboard();
 });

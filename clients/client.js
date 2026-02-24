@@ -1,39 +1,38 @@
-const btn = document.getElementById('menuBtn');
-const menu = document.getElementById('mobileMenu');
-const overlay = document.getElementById('overlay');
-const icon = btn.querySelector('svg path');
+const btn = document.getElementById("menuBtn");
+const menu = document.getElementById("mobileMenu");
+const overlay = document.getElementById("overlay");
+const icon = btn.querySelector("svg path");
 
-btn.addEventListener('click', () => {
-    if (menu.classList.contains('translate-x-full')) {
+btn.addEventListener("click", () => {
+    if (menu.classList.contains("translate-x-full")) {
         /* Ouvrir menu */
-        menu.classList.remove('translate-x-full');
-        menu.classList.add('translate-x-0');
-        overlay.classList.remove('hidden');
+        menu.classList.remove("translate-x-full");
+        menu.classList.add("translate-x-0");
+        overlay.classList.remove("hidden");
         /* Croix */
-        icon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+        icon.setAttribute("d", "M6 18L18 6M6 6l12 12");
     } else {
         /* Fermer menu */
-        menu.classList.add('translate-x-full');
-        menu.classList.remove('translate-x-0');
-        overlay.classList.add('hidden');
+        menu.classList.add("translate-x-full");
+        menu.classList.remove("translate-x-0");
+        overlay.classList.add("hidden");
         /* Hamburger */
-        icon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+        icon.setAttribute("d", "M4 6h16M4 12h16M4 18h16");
     }
 });
 
 /* Fermer menu en cliquant sur overlay */
-overlay.addEventListener('click', () => {
-    menu.classList.add('translate-x-full');
-    menu.classList.remove('translate-x-0');
-    overlay.classList.add('hidden');
-    icon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+overlay.addEventListener("click", () => {
+    menu.classList.add("translate-x-full");
+    menu.classList.remove("translate-x-0");
+    overlay.classList.add("hidden");
+    icon.setAttribute("d", "M4 6h16M4 12h16M4 18h16");
 });
 
 const logoutBtn = document.getElementById("logoutBtn");
 
 if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-
         /*Supprimer utilisateur connecté*/
         localStorage.removeItem("connectedUser");
 
@@ -52,20 +51,112 @@ if (logoutBtn) {
     });
 }
 
+function loadClientBanners() {
+    const banners = JSON.parse(localStorage.getItem("ebuy_banners") || "[]");
+    const container = document.getElementById("banner-container");
+    const prevBtn = document.getElementById("prevBanner");
+    const nextBtn = document.getElementById("nextBanner");
+
+    if (!container || banners.length === 0) return;
+
+    container.innerHTML = banners
+        .map(
+            (b) => `
+    <div class="min-w-full relative">
+      <a href="${b.link || "#"}">
+        <img src="${b.imageUrl}" 
+             alt="${b.title}" 
+             class="w-full h-[450px] object-cover"/>
+      </a>
+      <div class="absolute bottom-8 left-8 bg-black/60 text-white px-6 py-3 rounded-xl text-lg font-semibold">
+        ${b.title}
+      </div>
+    </div>
+  `,
+        )
+        .join("");
+
+    let currentIndex = 0;
+    const total = banners.length;
+
+    function updateSlider() {
+        container.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    // Si une seule image → pas de carrousel
+    if (total <= 1) {
+        if (prevBtn) prevBtn.classList.add("hidden");
+        if (nextBtn) nextBtn.classList.add("hidden");
+        return;
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % total;
+        updateSlider();
+    }
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + total) % total;
+        updateSlider();
+    }
+
+    nextBtn.addEventListener("click", nextSlide);
+    prevBtn.addEventListener("click", prevSlide);
+
+    setInterval(nextSlide, 4000);
+}
+
+document.addEventListener("DOMContentLoaded", loadClientBanners);
+
+document.addEventListener("DOMContentLoaded", loadClientBanners);
+
+document.addEventListener("DOMContentLoaded", loadClientBanners);
+
 const { jsPDF } = window.jspdf;
 
 /* PRODUITS */
 class ProductService {
     static init() {
         if (!localStorage.getItem("products")) {
-            localStorage.setItem("products", JSON.stringify([
-                { id: 1, name: "chaussure Nike rouge", price: 10000, image: "./assets/products/shoe1.jpg", description: "Chaussure rouge confortable et stylée pour tous les jours." },
-                { id: 2, name: "chaussure Nike blanche", price: 15000, image: "./assets/products/shoe1-2.jpg", description: "Chaussure blanche légère et élégante." },
-                { id: 3, name: "chaussure Nike verte", price: 20000, image: "./assets/products/shoe1-1.jpg", description: "Chaussure verte résistante et moderne." },
-                { id: 4, name: "Chaussure marron", price: 20000, image: "./assets/products/shoe1-3.jpg", description: "Chaussure marron chic pour toutes occasions." },
-            ]));
+            localStorage.setItem(
+                "products",
+                JSON.stringify([
+                    {
+                        id: 1,
+                        name: "chaussure Nike rouge",
+                        category: "Chaussure",
+                        price: 10000,
+                        image: "assets/products/shoe1.jpg",
+                        description:
+                            "Chaussure rouge confortable et stylée pour tous les jours.",
+                    },
+                    {
+                        id: 2,
+                        name: "chaussure Nike blanche",
+                        category: "Chaussure",
+                        price: 15000,
+                        image: "assets/products/shoe1-2.jpg",
+                        description: "Chaussure blanche légère et élégante.",
+                    },
+                    {
+                        id: 3,
+                        name: "chaussure Nike verte",
+                        category: "Chaussure",
+                        price: 20000,
+                        image: "assets/products/shoe1-1.jpg",
+                        description: "Chaussure verte résistante et moderne.",
+                    },
+                    {
+                        id: 4,
+                        name: "Chaussure marron",
+                        category: "Chaussure",
+                        price: 20000,
+                        image: "assets/products/shoe1-3.jpg",
+                        description: "Chaussure marron chic pour toutes occasions.",
+                    },
+                ]),
+            );
         }
-
     }
 
     static getAll() {
@@ -84,7 +175,7 @@ class CartService {
     }
 
     add(product) {
-        const existing = this.cart.find(p => Number(p.id) === Number(product.id));
+        const existing = this.cart.find((p) => Number(p.id) === Number(product.id));
         if (existing) {
             existing.quantity++;
         } else {
@@ -93,7 +184,7 @@ class CartService {
                 name: product.name,
                 price: product.price,
                 image: product.image,
-                quantity: 1
+                quantity: 1,
             });
         }
         this.save();
@@ -137,7 +228,7 @@ class FavoriteService {
     }
 
     add(product) {
-        const exists = this.favorites.find(p => p.id === product.id);
+        const exists = this.favorites.find((p) => p.id === product.id);
         if (!exists) {
             this.favorites.push(product);
             this.save();
@@ -152,12 +243,12 @@ class ShopApp {
         this.products = ProductService.getAll();
         this.displayedProducts = [...this.products];
         this.cartService = new CartService();
+        this.categoryInput = document.getElementById("category");
         this.favoriteService = new FavoriteService();
 
         this.currentPage = 1;
-        this.itemsPerPage = 12;
+        this.itemsPerPage = 16;
         this.pagination = document.getElementById("pagination");
-
 
         this.cacheDOM();
         this.bindEvents();
@@ -190,22 +281,21 @@ class ShopApp {
             this.cartModal.classList.remove("hidden");
         };
 
-        document.getElementById("closeCart").onclick =
-            () => this.cartModal.classList.add("hidden");
+        document.getElementById("closeCart").onclick = () =>
+            this.cartModal.classList.add("hidden");
 
-        document.getElementById("closeModal").onclick =
-            () => this.productModal.classList.add("hidden");
+        document.getElementById("closeModal").onclick = () =>
+            this.productModal.classList.add("hidden");
 
-        document.getElementById("addToCartModal").onclick =
-            () => this.addToCart(this.currentIndex);
+        document.getElementById("addToCartModal").onclick = () =>
+            this.addToCart(this.currentIndex);
 
-        document.getElementById("checkout").onclick =
-            () => this.checkout();
+        document.getElementById("checkout").onclick = () => this.checkout();
 
         this.searchInput.oninput = (e) => {
             const term = e.target.value.toLowerCase();
-            this.displayedProducts = this.products.filter(p =>
-                p.name.toLowerCase().includes(term)
+            this.displayedProducts = this.products.filter((p) =>
+                p.name.toLowerCase().includes(term),
             );
             this.currentPage = 1;
             this.renderProducts();
@@ -215,27 +305,40 @@ class ShopApp {
             this.searchByImage(e);
         });
 
+        document.addEventListener("click", (e) => {
+            if (e.target.classList.contains("category-btn")) {
+
+                const category = e.target.dataset.category;
+
+                if (category === "All") {
+                    this.displayedProducts = [...this.products];
+                } else {
+                    this.displayedProducts = this.products.filter(
+                        p => p.category === category
+                    );
+                }
+
+                this.currentPage = 1;
+                this.renderProducts();
+            }
+        });
     }
 
     searchByImage(event) {
-
         const file = event.target.files[0];
         if (!file) return;
 
         const fileName = file.name.toLowerCase();
         const cleanName = fileName.replace(/\.[^/.]+$/, "");
 
-        const words = cleanName
-            .split(/[\s-_]+/)
-            .filter(w => w.length > 2);
+        const words = cleanName.split(/[\s-_]+/).filter((w) => w.length > 2);
 
         let results = [];
 
-        this.products.forEach(product => {
-
+        this.products.forEach((product) => {
             const text = (product.name + " " + product.description).toLowerCase();
 
-            const match = words.some(word => text.includes(word));
+            const match = words.some((word) => text.includes(word));
 
             if (match) {
                 results.push(product);
@@ -244,10 +347,11 @@ class ShopApp {
 
         // fallback intelligent
         if (results.length === 0) {
-            results = this.products.filter(p =>
-                cleanName.includes("nike") ||
-                cleanName.includes("shoe") ||
-                cleanName.includes("chaussure")
+            results = this.products.filter(
+                (p) =>
+                    cleanName.includes("nike") ||
+                    cleanName.includes("shoe") ||
+                    cleanName.includes("chaussure"),
             );
         }
 
@@ -261,72 +365,122 @@ class ShopApp {
         this.renderProducts();
     }
 
+   renderProducts() {
+    this.grid.innerHTML = "";
 
+    if (this.displayedProducts.length === 0) {
+        this.grid.innerHTML =
+            "<p class='col-span-full text-center'>Aucun produit trouvé</p>";
+        if (this.pagination) this.pagination.innerHTML = "";
+        return;
+    }
 
-    renderProducts() {
-        this.grid.innerHTML = "";
+    //  PAGINATION
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    const paginatedProducts = this.displayedProducts.slice(start, end);
 
-        const start = (this.currentPage - 1) * this.itemsPerPage;
-        const end = start + this.itemsPerPage;
-        const paginatedProducts = this.displayedProducts.slice(start, end);
+    //  Catégories uniques SUR LA PAGE ACTUELLE
+    const categories = [
+        ...new Set(paginatedProducts.map((p) => p.category)),
+    ];
 
-        paginatedProducts.forEach((p, i) => {
+    categories.forEach((category) => {
+
+        // Titre catégorie
+        const title = document.createElement("h2");
+        title.className =
+            "col-span-full text-2xl font-bold mt-10 mb-6 border-b pb-2";
+        title.textContent = "Catégorie : " + category;
+        this.grid.appendChild(title);
+
+        // Produits de cette catégorie (sur la page actuelle)
+        const categoryProducts = paginatedProducts.filter(
+            (p) => p.category === category
+        );
+
+        categoryProducts.forEach((product) => {
+
             const card = document.createElement("div");
-            card.className = "bg-white rounded-xl shadow-md p-6 flex flex-col relative mt-5";
+            card.className =
+                "bg-white rounded-xl shadow-md p-6 flex flex-col hover:shadow-xl transition relative";
 
             card.innerHTML = `
-        <div class="flex justify-center mt-3 cursor-pointer">
-            <img src="${p.image}" class="w-full h-36 object-contain product-img">
-        </div>
-        <div class="mt-4 flex-1 flex flex-col justify-between">
-            <p class="text-gray-700 text-base font-semibold">${p.name}</p>
-            <p class="text-gray-500 text-sm mt-1">${p.description || ""}</p>
-            <div class="flex justify-between mt-2">
-                <span class="font-bold text-xl">${p.price} FCFA</span>
-                <span class="text-gray-400 cursor-pointer add-heart text-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                </svg>
+                <div class="flex justify-center mt-3 cursor-pointer product-img">
+                    <img src="${product.image}" class="w-full h-36 object-contain">
+                </div>
+                <div class="mt-4 flex-1">
+                    <p class="text-gray-700 font-semibold">${product.name}</p>
+                    <p class="text-gray-500 text-sm mt-1">${product.description || ""}</p>
+                    <div class="flex justify-between mt-2 items-center">
+                        <span class="font-bold text-xl">${product.price} FCFA</span>
 
-                </span>
-            </div>
-        </div>
-        <div class="mt-4 flex gap-3">
-            <button class="flex-1 bg-black text-white text-sm py-3 rounded-lg add">Ajouter</button>
-            <button class="flex-1 border text-sm py-3 rounded-lg details">Détails</button>
-        </div>
-        `;
+                        <!--  Cœur favoris -->
+                        <span class="text-gray-400 cursor-pointer add-heart text-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5" stroke="currentColor"
+                                 class="w-6 h-6">
+                              <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex gap-3">
+                    <button class="flex-1 bg-black text-white text-sm py-3 rounded-lg add">
+                        Ajouter
+                    </button>
+                    <button class="flex-1 border text-sm py-3 rounded-lg details">
+                        Détails
+                    </button>
+                </div>
+            `;
 
             this.grid.appendChild(card);
 
-            const realIndex = this.displayedProducts.indexOf(p);
+            const realIndex = this.displayedProducts.indexOf(product);
 
-            card.querySelector(".add").onclick = () => this.addToCart(realIndex);
+            // Ajouter au panier
+            card.querySelector(".add").onclick = () =>
+                this.addToCart(realIndex);
+
+            // Ajouter aux favoris
             card.querySelector(".add-heart").onclick = () => {
-
-                const product = this.displayedProducts[realIndex];
-
                 const confirmAdd = confirm(
-                    `Voulez-vous ajouter "${product.name}" au favori ?`
+                    `Voulez-vous ajouter "${product.name}" aux favoris ?`
                 );
-
                 if (confirmAdd) {
                     this.favoriteService.add(product);
-                    alert("Produit ajouté aux favoris");
+                    alert(`${product.name} ajouté aux favoris !`);
                 }
             };
-            card.querySelector(".details").onclick = () => this.openModal(realIndex);
-            card.querySelector(".product-img").onclick = () => this.openModal(realIndex);
-        });
 
-        this.renderPagination();
+            // Détails
+            card.querySelector(".details").onclick = () =>
+                this.openModal(realIndex);
+
+            card.querySelector(".product-img").onclick = () =>
+                this.openModal(realIndex);
+        });
+    });
+
+    // 🔥 Pagination affichée seulement si nécessaire
+    if (this.pagination) {
+        if (this.displayedProducts.length > this.itemsPerPage) {
+            this.renderPagination();
+        } else {
+            this.pagination.innerHTML = "";
+        }
     }
+}
 
     renderPagination() {
         this.pagination.innerHTML = "";
 
         const totalPages = Math.ceil(
-            this.displayedProducts.length / this.itemsPerPage
+            this.displayedProducts.length / this.itemsPerPage,
         );
 
         for (let i = 1; i <= totalPages; i++) {
@@ -347,14 +501,13 @@ class ShopApp {
         }
     }
 
-
     openModal(index) {
         this.currentIndex = index;
         const p = this.displayedProducts[index];
         this.modalImage.src = p.image;
         this.modalName.textContent = p.name;
         this.modalPrice.textContent = `${p.price} FCFA`;
-        this.modalDescription.textContent = p.description || ""; // Description ajoutée
+        this.modalDescription.textContent = p.description || "";
         this.productModal.classList.remove("hidden");
     }
 
@@ -434,7 +587,11 @@ class ShopApp {
         doc.setFontSize(10);
         doc.setTextColor(...gray);
         const date = new Date();
-        doc.text(`Date : ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`, 20, 35);
+        doc.text(
+            `Date : ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`,
+            20,
+            35,
+        );
         doc.text("E-Buy Shop", 150, 35);
 
         /*Table*/
@@ -451,7 +608,7 @@ class ShopApp {
         let total = 0;
         doc.setFont("helvetica", "normal");
 
-        this.cartService.cart.forEach(p => {
+        this.cartService.cart.forEach((p) => {
             const subtotal = p.price * p.quantity;
             total += subtotal;
 
@@ -484,13 +641,13 @@ class ShopApp {
         const sale = {
             id: Date.now(),
             date: new Date().toISOString(), // garde date + heure
-            items: this.cartService.cart.map(p => ({
+            items: this.cartService.cart.map((p) => ({
                 id: p.id,
                 name: p.name,
                 price: p.price,
-                quantity: p.quantity
+                quantity: p.quantity,
             })),
-            total: total
+            total: total,
         };
 
         const sales = JSON.parse(localStorage.getItem("sales") || "[]");
@@ -505,10 +662,61 @@ class ShopApp {
 
         alert("Paiement effectué ! Vente enregistrée.");
     }
-
-
-
 }
 
 /*INIT*/
-const app = new ShopApp();
+function renderClientCategories() {
+    const products = JSON.parse(localStorage.getItem("products") || "[]");
+    const categories = [...new Set(products.map(p => p.category))];
+
+    const desktopContainer = document.getElementById("client-category-list");
+    const mobileContainer = document.getElementById("mobile-category-list");
+
+    const html = categories.map(cat => `
+      <button class="category-btn block w-full text-left px-4 py-2 hover:bg-gray-100 border-b"
+        data-category="${cat}">
+        ${cat}
+      </button>
+  `).join("");
+
+    if (desktopContainer) desktopContainer.innerHTML = html;
+    if (mobileContainer) mobileContainer.innerHTML = html;
+}
+
+function initCategoryDropdown() {
+    const toggle = document.getElementById("category-toggle");
+    const dropdown = document.getElementById("category-dropdown");
+
+    if (!toggle || !dropdown) return;
+
+    // Ouvrir / fermer au clic
+    toggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("hidden");
+    });
+
+    // Fermer si clic ailleurs
+    document.addEventListener("click", (e) => {
+        if (!dropdown.contains(e.target) && e.target !== toggle) {
+            dropdown.classList.add("hidden");
+        }
+    });
+}
+
+function initMobileCategoryDropdown() {
+    const toggle = document.getElementById("mobileCategoryToggle");
+    const dropdown = document.getElementById("mobileCategoryDropdown");
+
+    if (!toggle || !dropdown) return;
+
+    toggle.addEventListener("click", () => {
+        dropdown.classList.toggle("hidden");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    renderClientCategories();
+    initCategoryDropdown();
+    initMobileCategoryDropdown();
+    window.app = new ShopApp();
+});

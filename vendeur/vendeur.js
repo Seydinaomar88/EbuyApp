@@ -31,6 +31,7 @@ class ProductManager {
     this.form = options.formId ? document.getElementById(options.formId) : null;
     this.nameInput = this.form ? document.getElementById("name") : null;
     this.priceInput = this.form ? document.getElementById("price") : null;
+    this.categoryInput = this.form ? document.getElementById("category") : null;
     this.descriptionInput = this.form ? document.getElementById("description") : null;
     this.imageInput = this.form ? document.getElementById("image") : null;
 
@@ -76,8 +77,9 @@ class ProductManager {
     const name = this.nameInput.value.trim();
     const price = this.priceInput.value.trim();
     const description = this.descriptionInput.value.trim();
+    const category = this.categoryInput.value;
 
-    if (!name || !price || !description || this.imageInput.files.length === 0) {
+    if (!name || !price || !description || !category || this.imageInput.files.length === 0) {
       this.showCard("Veuillez remplir tous les champs et choisir une image !", "error");
       return;
     }
@@ -85,7 +87,14 @@ class ProductManager {
     const products = this.getProducts();
     const reader = new FileReader();
     reader.onload = (event) => {
-      const productData = { name, price, description, image: event.target.result };
+      const productData = {
+        id: Date.now(),
+        name,
+        category,
+        price: Number(price),
+        description,
+        image: event.target.result
+      };;
       products.push(productData);
       this.saveProducts(products);
       this.form.reset();

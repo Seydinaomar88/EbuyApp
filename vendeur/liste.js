@@ -53,9 +53,9 @@ class ProductManager {
             tr.innerHTML = `
                 <td class="px-4 py-2">${realIndex + 1}</td>
                 <td class="px-4 py-2"><img src="${p.image}" class="w-16 h-16 object-cover rounded"></td>
-                <td class="px-4 py-2">${p.name}</td>
                 <td class="px-4 py-2">${p.description}</td>
-                <td class="px-4 py-2">${p.price} FCFA</td>
+<td>${p.category || "-"}</td>
+<td class="px-4 py-2">${p.price} FCFA</td>
                 <td class="px-4 py-2 flex gap-2">
                     <button class="bg-yellow-500 text-white px-3 py-1 rounded edit-btn" data-index="${realIndex}">Modifier</button>
                     <button class="bg-red-600 text-white px-3 py-1 rounded delete-btn" data-index="${realIndex}">Supprimer</button>
@@ -109,6 +109,7 @@ class ProductManager {
         const p = products[index];
         document.getElementById("editName").value = p.name;
         document.getElementById("editDescription").value = p.description;
+        document.getElementById("editCategorie").value = p.category || "";
         document.getElementById("editPrice").value = p.price;
         document.getElementById("editIndexModal").value = index;
         document.getElementById("editModal").classList.remove("hidden");
@@ -150,13 +151,16 @@ document.getElementById("editForm").onsubmit = (e) => {
     const index = document.getElementById("editIndexModal").value;
     const name = document.getElementById("editName").value;
     const description = document.getElementById("editDescription").value;
+    const categorie = document.getElementById("editCategorie").value; // ✅ AJOUT
     const price = document.getElementById("editPrice").value;
     const file = document.getElementById("editImage").files[0];
 
     const products = JSON.parse(localStorage.getItem("products") || "[]");
     const product = products[index];
+
     product.name = name;
     product.description = description;
+    product.category = categorie;
     product.price = price;
 
     if (file) {
