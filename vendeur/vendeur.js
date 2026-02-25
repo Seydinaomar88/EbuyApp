@@ -1,18 +1,33 @@
 /* Sidebar mobile toggle */
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
-document.getElementById("openSidebar").onclick = () => {
-  sidebar.classList.remove("-translate-x-full");
-  overlay.classList.remove("hidden");
-};
-document.getElementById("closeSidebar").onclick = () => {
-  sidebar.classList.add("-translate-x-full");
-  overlay.classList.add("hidden");
-};
-overlay.onclick = () => {
-  sidebar.classList.add("-translate-x-full");
-  overlay.classList.add("hidden");
-};
+document.addEventListener("DOMContentLoaded", () => {
+
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const openBtn = document.getElementById("openSidebar");
+  const closeBtn = document.getElementById("closeSidebar");
+
+  if (openBtn) {
+    openBtn.onclick = () => {
+      sidebar.classList.remove("-translate-x-full");
+      overlay.classList.remove("hidden");
+    };
+  }
+
+  if (closeBtn) {
+    closeBtn.onclick = () => {
+      sidebar.classList.add("-translate-x-full");
+      overlay.classList.add("hidden");
+    };
+  }
+
+  if (overlay) {
+    overlay.onclick = () => {
+      sidebar.classList.add("-translate-x-full");
+      overlay.classList.add("hidden");
+    };
+  }
+
+});
 
 /* Logout */
 const logoutBtn = document.getElementById("logoutBtn");
@@ -104,10 +119,32 @@ class ProductManager {
   }
 }
 
+function loadDashboardStats() {
+
+  const products = JSON.parse(localStorage.getItem("products") || "[]");
+  const sales = JSON.parse(localStorage.getItem("sales") || "[]");
+
+  const totalProducts = products.length;
+  const totalSales = sales.length;
+
+  const totalRevenue = sales.reduce((sum, s) =>
+    sum + Number(s.total || 0), 0);
+
+  document.getElementById("totalProducts").textContent = totalProducts;
+  document.getElementById("totalSales").textContent = totalSales;
+  document.getElementById("totalRevenue").textContent =
+    totalRevenue.toLocaleString() + " FCFA";
+}
 /* Initialisation */
 document.addEventListener("DOMContentLoaded", () => {
+
   const form = document.getElementById("productForm") ? "productForm" : null;
+
   if (form) {
     new ProductManager({ formId: form });
   }
+
+  loadDashboardStats();
 });
+
+

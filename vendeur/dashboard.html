@@ -4,16 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Liste des produits</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="bg-gray-100">
 
     <div class="flex h-screen">
 
-        <!-- Sidebar -->
-       <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-xl flex flex-col
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-xl flex flex-col
     transform -translate-x-full md:translate-x-0 transition duration-300 z-30">
 
       <!-- HEADER SIDEBAR -->
@@ -85,110 +86,119 @@
 
     </aside>
 
-        <!-- Main content -->
+        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-20 md:hidden"></div>
+
+        <!-- MAIN -->
         <div class="flex-1 flex flex-col md:ml-64">
 
-            <!-- Navbar -->
             <header class="flex justify-between items-center bg-white shadow-sm h-16 px-6">
 
-                <!-- LEFT : Hamburger mobile -->
-                <div class="flex items-center gap-3">
+                <button id="openSidebar" class="md:hidden text-gray-600 hover:text-purple-600 transition">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
 
-                    <button id="openSidebar" class="md:hidden text-gray-600 hover:text-purple-600 transition">
-
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-
-                    </button>
-
-                    <h2 class="text-lg font-bold text-gray-800 md:hidden">
-                        Vendeur
-                    </h2>
-
-                </div>
-
-                <!-- RIGHT : Logout -->
-                <div class="ml-auto">
-
-                    <button id="logoutBtn" class="flex items-center gap-2 bg-red-600 text-white px-5 py-2.5 rounded-xl
-        hover:bg-red-700 transition shadow-sm">
-
+                <div class="ml-auto flex items-center gap-4">
+                    <button id="logoutBtn"
+                        class="flex items-center gap-2 bg-red-600 text-white px-5 py-2.5 rounded-xl hover:bg-red-700 transition shadow-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 24 24">
-
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 17l5-5-5-5M21 12H9" />
-
                         </svg>
-
                         Déconnecter
                     </button>
-
                 </div>
 
             </header>
 
-            <main class="flex-1 p-6 overflow-auto">
+            <main class="p-6 overflow-auto">
 
-                <!-- Tableau produits -->
-                <section>
-                    <h2 class="text-2xl font-bold mb-4">Liste des produits</h2>
-                    <table class="min-w-full bg-white rounded-xl shadow-md overflow-hidden">
-                        <thead class="bg-gray-200">
-                            <tr>
-                                <th class="px-4 py-2 text-left">#</th>
-                                <th class="px-4 py-2 text-left">Image</th>
-                                <th class="px-4 py-2 text-left">Nom</th>
-                                <th class="px-4 py-2 text-left">Description</th>
-                                <th class="px-4 py-2 text-left">Prix</th>
-                                <th class="px-4 py-2 text-left">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsTableBody"></tbody>
-                    </table>
-                    <!-- Pagination -->
-                    <div id="pagination" class="flex justify-center items-center gap-2 mt-4"></div>
+                <h2 class="text-3xl font-bold mb-8 flex items-center gap-3 text-gray-800">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 3h6v6H3V3zm12 0h6v10h-6V3zM3 15h6v6H3v-6zm12 4v-6h6v6h-6z" />
+                    </svg>
+                    Dashboard Analytics
+                </h2>
 
-                </section>
+                <div class="grid md:grid-cols-2 gap-8">
+
+                    <div class="bg-white p-6 rounded-2xl shadow border border-gray-100">
+                        <h3 class="font-semibold mb-4">Ventes par mois</h3>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow border border-gray-100">
+                        <h3 class="font-semibold mb-4">Produits vs Ventes</h3>
+                        <canvas id="productChart"></canvas>
+                    </div>
+
+                </div>
 
             </main>
+
         </div>
     </div>
 
-    <!-- Modal Modifier -->
-    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-2xl p-6 w-11/12 max-w-md mx-auto">
-            <h3 class="text-2xl font-bold mb-4 text-center">Modifier le produit</h3>
-            <form id="editForm" class="space-y-3">
-                <input type="text" id="editName" placeholder="Nom du produit" class="border p-3 w-full rounded-lg"
-                    required>
-                <textarea id="editDescription" placeholder="Description du produit" class="border p-3 w-full rounded-lg"
-                    required></textarea>
-                <select id="editCategorie">
-                    <option value="">Choisir une catégorie</option>
-                    <option value="Chaussure">Chaussure</option>
-                    <option value="Habits">Habits</option>
-                    <option value="Accessoires">Accessoires</option>
-                    <option value="Electronique">Electronique</option>
-                </select>
-                <input type="number" id="editPrice" placeholder="Prix" class="border p-3 w-full rounded-lg" required>
-                <input type="file" id="editImage" accept="image/*" class="border p-3 w-full rounded-lg">
-                <input type="hidden" id="editIndexModal">
-                <div class="flex justify-end gap-3 mt-2">
-                    <button type="button" id="closeModal"
-                        class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition">Annuler</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">Enregistrer</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <script>
+        // Sidebar mobile
+        const sidebar = document.getElementById("sidebar");
+        document.getElementById("openSidebar")?.addEventListener("click", () => {
+            sidebar.classList.remove("-translate-x-full");
+            document.getElementById("overlay")?.classList.remove("hidden");
+        });
 
-    <script src="./liste.js"></script>
+        document.getElementById("overlay")?.addEventListener("click", () => {
+            sidebar.classList.add("-translate-x-full");
+            document.getElementById("overlay")?.classList.add("hidden");
+        });
+
+        // Logout
+        const logoutBtn = document.getElementById("logoutBtn");
+        logoutBtn?.addEventListener("click", () => {
+            localStorage.removeItem("connectedUser");
+            window.location.href = "../index.html";
+        });
+
+        // Charts
+        function loadCharts() {
+            const sales = JSON.parse(localStorage.getItem("sales") || "[]");
+
+            // Group sales by month
+            const months = {};
+            sales.forEach(s => {
+                const d = new Date(s.date);
+                const key = d.getFullYear() + "-" + (d.getMonth() + 1);
+                months[key] = (months[key] || 0) + Number(s.total || 0);
+            });
+
+            const labels = Object.keys(months);
+            const data = Object.values(months);
+
+            new Chart(document.getElementById('salesChart'), {
+                type: 'line',
+                data: { labels: labels, datasets: [{ label: 'Ventes FCFA', data: data, fill: true }] }
+            });
+
+            const products = JSON.parse(localStorage.getItem("products") || "[]");
+
+            new Chart(document.getElementById('productChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Produits', 'Ventes'],
+                    datasets: [{ data: [products.length, sales.length] }]
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadCharts);
+    </script>
+
 </body>
 
 </html>

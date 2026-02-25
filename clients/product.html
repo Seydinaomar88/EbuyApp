@@ -163,74 +163,61 @@
         </div>
     </nav>
 
-    <!-- Recherche -->
-    <section class="pt-24 max-w-7xl mx-auto px-6">
-        <div class="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row gap-4 items-center">
-            <input id="searchText" type="text" placeholder="Rechercher un produit..."
-                class="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500">
-            <label class="flex items-center gap-2 border px-4 py-2 rounded-lg cursor-pointer">
-                Recherche par image
-                <input type="file" id="searchImage" accept="image/*" class="hidden">
-            </label>
+  <div class="max-w-7xl mx-auto px-6 py-20">
+
+    <div class="grid md:grid-cols-2 gap-14 bg-white p-12 rounded-3xl shadow-1xl mt-10 relative overflow-hidden">
+
+    <!-- DECO BACKGROUND -->
+    <div class="absolute -top-40 -right-40 w-96 h-96 bg-purple-500 opacity-10 rounded-full blur-3xl"></div>
+
+    <!-- IMAGE -->
+    <div class="flex justify-center relative z-10">
+        <div class="bg-gray-50 p-6 rounded-2xl shadow-inner">
+            <img id="detailImage"
+                class="w-full max-h-[500px] object-contain hover:scale-105 transition duration-500">
         </div>
-    </section>
-
-
-    <!--  PRODUITS  -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
-        <section class="py-8">
-            <div id="banner-slider" class="relative overflow-hidden rounded-2xl shadow-lg">
-
-                <div id="banner-container" class="flex transition-transform duration-700 ease-in-out">
-                </div>
-
-                <!-- Boutons -->
-                <button id="prevBanner"
-                    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-black px-3 py-2 rounded-full shadow">
-                    ❮
-                </button>
-
-                <button id="nextBanner"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-black px-3 py-2 rounded-full shadow">
-                    ❯
-                </button>
-
-            </div>
-        </section>
-        <div id="productsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
-        <!--  PAGINATION AJOUTÉE -->
-        <div id="pagination" class="flex justify-center gap-2 mt-10 flex-wrap"></div>
-    </main>
-
-    <!--MODAL PRODUIT  -->
-    <!-- <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div class="bg-white p-6 rounded-lg w-96 relative">
-            <button id="closeModal" class="absolute top-2 right-2">X</button>
-            <img id="modalImage" class="w-full h-48 object-contain" />
-            <h2 id="modalName" class="text-xl font-bold mt-2"></h2>
-            <p id="modalPrice" class="text-gray-700 mt-1"></p>
-            <p id="modalDescription" class="text-gray-500 mt-2"></p>
-            <button id="addToCartModal" class="mt-4 bg-black text-white py-2 w-full rounded">Ajouter au panier</button>
-        </div>
-    </div> -->
-
-
-    <!--  PANIER  -->
-    <!-- <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-xl w-11/12 md:w-1/2 max-h-[80vh] overflow-y-auto relative">
-            <button id="closeCart" class="absolute top-2 right-3 text-xl">✕</button>
-            <h2 class="text-xl font-bold mb-4">Votre panier</h2>
-            <div id="cartItems" class="space-y-2"></div>
-            <p class="mt-4 font-bold">Total : <span id="cartTotal">0</span> FCFA</p>
-            <button id="checkout" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg">Payer & Générer
-                facture</button>
-        </div>
-    </div> -->
-
-    <!-- TOAST  -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-black text-white px-4 py-2 rounded-lg opacity-0 transition">Message
     </div>
 
+    <!-- INFOS -->
+    <div class="relative z-10 flex flex-col justify-center">
+
+        <h1 id="detailName" class="text-4xl font-bold text-gray-800 mb-5 leading-tight"></h1>
+
+        <p id="detailPrice"
+            class="text-3xl font-bold text-purple-600 mb-6 tracking-wide">
+        </p>
+
+        <p id="detailDescription" class="text-gray-500 leading-relaxed mb-8 text-lg"></p>
+
+        <!-- QUANTITE -->
+        <div class="flex items-center gap-6 mb-8">
+
+            <button id="minus"
+                class="w-12 h-12 flex items-center justify-center border rounded-xl hover:bg-gray-100 text-xl transition">
+                −
+            </button>
+
+            <span id="qty" class="text-2xl font-semibold">1</span>
+
+            <button id="plus"
+                class="w-12 h-12 flex items-center justify-center border rounded-xl hover:bg-gray-100 text-xl transition">
+                +
+            </button>
+        </div>
+
+        <!-- BOUTON AJOUT -->
+        <button id="addToCartBtn"
+            class="bg-gradient-to-r from-purple-600 to-pink-500 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:scale-105 transition duration-300 shadow-lg w-fit flex items-center gap-3">
+            <i class="fas fa-shopping-cart"></i>
+            Ajouter au panier
+        </button>
+
+    </div>
+</div>
+
+</div>
+
+<script src="product.js"></script>
 
 
     <footer class=" bg-gray-100 text-gray-300 py-12 px-6 md:px-12 font-sans border-t border-gray-800 mt-5 ">
@@ -309,7 +296,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
+    <script src="panier.js"></script>
     <script src="./client.js"></script>
 </body>
 
 </html>
+
+
+
+
+

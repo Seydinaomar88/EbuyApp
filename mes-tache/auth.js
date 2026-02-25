@@ -79,7 +79,7 @@ if (registerForm) {
     alert("Compte créé avec succès");
 
     // 🔥 Redirection correcte GitHub Pages
-    window.location.href = "./index.html";
+   window.location.href = "../index.html";
   });
 }
 
