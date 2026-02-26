@@ -40,6 +40,11 @@ function hashPassword(password) {
   return btoa(password); // simulation hash
 }
 
+// 🔥 NOUVEAU : récupération statut admin (actif / désactivé)
+function getAdminUserStatusMap() {
+  return JSON.parse(localStorage.getItem("ebuy_admin_user_status")) || {};
+}
+
 
 // =========================
 // INSCRIPTION
@@ -78,8 +83,7 @@ if (registerForm) {
 
     alert("Compte créé avec succès");
 
-    // 🔥 Redirection correcte GitHub Pages
-   window.location.href = "/EbuyApp/index.html";
+    window.location.href = "/EbuyApp/index.html";
   });
 }
 
@@ -110,9 +114,18 @@ if (loginForm) {
       return;
     }
 
+    // 🔥 Vérification si compte désactivé par admin
+    const statusMap = getAdminUserStatusMap();
+    const userKey = user.email;
+
+    if (userKey in statusMap && statusMap[userKey] === false) {
+      alert("Votre compte a été désactivé par l'administrateur.");
+      return;
+    }
+
     localStorage.setItem("connectedUser", JSON.stringify(user));
 
-    // 🔥 REDIRECTIONS CORRIGÉES pour GitHub Pages
+    // 🔥 TES REDIRECTIONS (non modifiées)
     if (user.role === "admin") {
       window.location.href = "./admin-dashboard.html";
     } 
@@ -132,8 +145,19 @@ if (loginForm) {
 
 function protectPage(requiredRole = null) {
   const user = JSON.parse(localStorage.getItem("connectedUser"));
+  const statusMap = getAdminUserStatusMap();
 
   if (!user) {
+    window.location.href = "./index.html";
+    return;
+  }
+
+  const userKey = user.email;
+
+  // 🔥 Vérifie si l'utilisateur a été désactivé
+  if (userKey in statusMap && statusMap[userKey] === false) {
+    localStorage.removeItem("connectedUser");
+    alert("Votre compte a été désactivé.");
     window.location.href = "./index.html";
     return;
   }
